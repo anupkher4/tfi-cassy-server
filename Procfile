@@ -1,0 +1,1 @@
+web: DEBUG=cassyserver:* npm start
