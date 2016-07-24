@@ -1,0 +1,22 @@
+{
+  "name": "cassyserver",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "bookshelf": "^0.10.0",
+    "chance": "^1.0.3",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "hjs": "~0.0.6",
+    "knex": "^0.11.7",
+    "moment": "^2.14.1",
+    "morgan": "~1.7.0",
+    "mysql": "^2.11.1",
+    "serve-favicon": "~2.3.0"
+  }
+}
