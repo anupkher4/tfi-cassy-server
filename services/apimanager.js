@@ -29,6 +29,8 @@ connection.connect((err) => {
 // Create a new user
 apimanager.createUser = (params, callback) => {
   var user = {
+    first_name: params.user.firstname,
+    last_name: params.user.lastname,
     username: params.user.username,
     password: params.user.password,
     role: params.user.role,
@@ -62,6 +64,8 @@ apimanager.getUser = (id, callback) => {
 // Update a user
 apimanager.updateUser = (id, params, callback) => {
   var user = {
+    first_name: params.user.firstname,
+    last_name: params.user.lastname,
     username: params.user.username,
     password: params.user.password,
     role: params.user.role,
