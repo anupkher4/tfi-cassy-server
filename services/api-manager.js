@@ -1,10 +1,9 @@
 var connection = require('../database/connection');
 
 var moment = require('moment');
-var Chance = require('chance');
-var chance = new Chance();
+var chance = require('chance').Chance();
 
-var apimanager = {};
+var apiManager = {};
 
 // Build user object details
 var rightNow = moment().format('YYYY-MM-DD HH:mm:ss');
@@ -15,6 +14,7 @@ var managerId = () => {
   }
   return id;
 };
+var initialPassword = chance.string({length: 8});
 
 // Connect to database
 connection.connect((err) => {
@@ -26,13 +26,20 @@ connection.connect((err) => {
   console.log('connected as id' + connection.threadId);
 });
 
+// Login
+
+
+// Change password
+
+// Logout
+
 // Create a new user
-apimanager.createUser = (params, callback) => {
+apiManager.createUser = (params, callback) => {
   var user = {
     first_name: params.user.firstname,
     last_name: params.user.lastname,
     username: params.user.username,
-    password: params.user.password,
+    password: initialPassword,
     role: params.user.role,
     manager_user_id: params.user.managerid,
     created_at: rightNow,
@@ -51,7 +58,7 @@ apimanager.createUser = (params, callback) => {
 };
 
 // Get a user
-apimanager.getUser = (id, callback) => {
+apiManager.getUser = (id, callback) => {
   connection.query('SELECT * FROM user WHERE user_id = ?', id, (err, result) => {
     if (err) {
       callback(err);
@@ -62,7 +69,7 @@ apimanager.getUser = (id, callback) => {
 };
 
 // Update a user
-apimanager.updateUser = (id, params, callback) => {
+apiManager.updateUser = (id, params, callback) => {
   var user = {
     first_name: params.user.firstname,
     last_name: params.user.lastname,
@@ -86,7 +93,7 @@ apimanager.updateUser = (id, params, callback) => {
 };
 
 // Delete a user
-apimanager.deleteUser = (id, callback) => {
+apiManager.deleteUser = (id, callback) => {
   connection.query('DELETE FROM user WHERE user_id = ?', id, (err, result) => {
     if (err) {
       callback(err);
@@ -108,4 +115,4 @@ var closeDatabaseConnection = () => {
 };
 
 
-module.exports = apimanager;
+module.exports = apiManager;

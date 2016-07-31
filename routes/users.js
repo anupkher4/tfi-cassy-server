@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var apimanager = require('../services/apimanager');
+var apiManager = require('../services/api-manager');
 
 // GET all users
 router.get('/', (req, res, next) => {
@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 
 // GET user by userid
 router.get('/:userid', (req, res, next) => {
-  apimanager.getUser(req.params.userid, (err, result) => {
+  apiManager.getUser(req.params.userid, (err, result) => {
     if (err) {
       console.error('No user for the given id ' + req.params.userid + err);
     }
@@ -20,7 +20,7 @@ router.get('/:userid', (req, res, next) => {
 
 // POST create a new user
 router.post('/', (req, res, next) => {
-  apimanager.createUser(req.body, (err, result) => {
+  apiManager.createUser(req.body, (err, result) => {
     if (err) {
       console.error('Error creating a new user' + err);
     }
@@ -32,7 +32,7 @@ router.post('/', (req, res, next) => {
 
 // PUT update a user
 router.put('/:userid', (req, res, next) => {
-  apimanager.updateUser(req.params.userid, req.body, (err, result) => {
+  apiManager.updateUser(req.params.userid, req.body, (err, result) => {
     if (err) {
       console.error('Could not update user with id ' + req.params.userid + err);
     }
@@ -44,7 +44,7 @@ router.put('/:userid', (req, res, next) => {
 
 // DELETE a user
 router.delete('/:userid', (req, res, next) => {
-  apimanager.deleteUser(req.params.userid, (err, result) => {
+  apiManager.deleteUser(req.params.userid, (err, result) => {
     if (err) {
       console.error('Error deleting user with id ' + req.params.id);
     }
