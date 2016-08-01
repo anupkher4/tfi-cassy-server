@@ -26,12 +26,18 @@ connection.connect((err) => {
   console.log('connected as id' + connection.threadId);
 });
 
-// Login
-
-
 // Change password
-
-// Logout
+apiManager.changePassword = (id, params, callback) => {
+  var username = params.user.username;
+  var password = params.user.password;
+  connection.query('UPDATE user SET password = ? WHERE user_id = ? AND username = ?', [password, id, username], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
 
 // Create a new user
 apiManager.createUser = (params, callback) => {

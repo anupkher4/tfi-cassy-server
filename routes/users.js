@@ -42,6 +42,18 @@ router.put('/:userid', (req, res, next) => {
   });
 });
 
+// PUT change user password
+router.put('/:userid/change-password', (req, res, next) => {
+  apiManager.changePassword(req.params.userid, req.body, (err, result) => {
+    if (err) {
+      console.error('Error changing user\'s password ' + req.params.userid + err);
+    }
+    
+    console.log('Password updated');
+    res.status(200).send('Updated ' + result.changedRows + ' rows');
+  });
+});
+
 // DELETE a user
 router.delete('/:userid', (req, res, next) => {
   apiManager.deleteUser(req.params.userid, (err, result) => {
