@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var apiManager = require('../services/api-manager');
+var apiMailgun = require('../services/mailgun');
 
 // GET all users
 router.get('/', (req, res, next) => {
@@ -26,6 +27,34 @@ router.post('/', (req, res, next) => {
     }
     
     console.log('User inserted with id ' + result.insertId);
+    
+    // Get created user details for sending email
+    apiManager.getUser(result.insertId, (err, user) => {
+      if (err) {
+        console.error('No user for the given id ' + result.insertId + err);
+      }
+      
+      // Construct email data object
+      var data = {
+        from: 'Admin <admin@cassyapp.com>',
+        to: 'anup.kher.1990@gmail.com',
+        subject: 'Hello from Cassy',
+        text: `You have been entered into the system. Your default password is ${user[0].password}`
+      };
+    
+      // Send email with default password
+      apiMailgun.sendMail(data, (err, body) => {
+        if (err) {
+          console.error('There was an error sending the email: ' + err);
+        }
+      
+        console.log(body);
+      });
+      
+      console.log(user);
+    
+    });
+    
     res.status(201).send(result);
   });
 });

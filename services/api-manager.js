@@ -26,6 +26,7 @@ connection.connect((err) => {
   console.log('connected as id' + connection.threadId);
 });
 
+// USERS
 // Change password
 apiManager.changePassword = (id, params, callback) => {
   var username = params.user.username;
@@ -107,6 +108,12 @@ apiManager.deleteUser = (id, callback) => {
     
     callback(null, result);
   });
+};
+
+// STUDENTS
+// Create a student
+apiManager.createStudent = (params, callback) => {
+  
 };
 
 // Close database connection
