@@ -5,7 +5,13 @@ var apiMailgun = require('../services/mailgun');
 
 // GET all users
 router.get('/', (req, res, next) => {
-  res.send('a list of all users');
+  apiManager.allUsers((err, result) => {
+    if (err) {
+      console.error(`Error getting all users ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
 });
 
 // GET user by userid
@@ -48,10 +54,7 @@ router.post('/', (req, res, next) => {
           console.error('There was an error sending the email: ' + err);
         }
       
-        console.log(body);
       });
-      
-      console.log(user);
     
     });
     

@@ -4,27 +4,58 @@ var apiManager = require('../services/api-manager');
 
 // GET all students
 router.get('/', (req, res, next) => {
-  res.statusCode(200).send('a list of all students');
+  apiManager.allStudents((err, result) => {
+    if (err) {
+      console.error(`Error getting all students ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
 });
 
 // GET student by studentid
 router.get('/:studentid', (req, res, next) => {
-  res.statusCode(200).send('user with studentid' + req.params);
+  apiManager.getStudent(req.params.studentid, (err, result) => {
+    if (err) {
+      console.error(`Could not find user with userid ${req.params.studentid} ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
 });
 
 // POST create a new student
 router.post('/', (req, res, next) => {
-  res.statusCode(201).send('student created');
+  apiManager.createStudent(req.body, (err, result) => {
+    if (err) {
+      console.error(`Could not create student ${err}`);
+    }
+    
+    console.log(`Student created with id ${result.insertId}`);
+    res.status(201).send(result);
+  });
 });
 
 // PUT update a student
 router.put('/:studentid', (req, res, next) => {
-  res.statusCode(200).send('student updated');
+  apiManager.updateStudent(req.params.studentid, req.body, (err, result) => {
+    if (err) {
+      console.error(`Could not find user with userid ${req.params.studentid} ${err}`);
+    }
+    
+    res.status(201).send('Updated ' + result.changedRows + ' rows');
+  });
 });
 
 // DELETE a student
 router.delete('/:studentid', (req, res, next) => {
-  res.statusCode(200).send('student deleted' + req.params)
+  apiManager.deleteStudent(req.params.studentid, (err, result) => {
+    if (err) {
+      console.error(`Could not delete student with ${req.params.studentid} ${err}`);
+    }
+    
+    res.status(200).send('Deleted ' + result.affectedRows + ' rows')
+  });
 });
 
 module.exports = router;
