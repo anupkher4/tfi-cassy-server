@@ -27,24 +27,6 @@ connection.connect((err) => {
 });
 
 // USERS
-var createUserWithData = (fname, lname, uname, pass, role, manId, cAt, cBy, mAt, mBy, active) => {
-  var user = {
-    first_name: fname,
-    last_name: lname,
-    username: uname,
-    password: pass,
-    role: role,
-    manager_user_id: manId,
-    created_at: cAt,
-    created_by: cBy,
-    last_modified_at: mAt,
-    last_modified_by: mBy,
-    active: active
-  };
-  
-  return user;
-};
-
 // Change password
 apiManager.changePassword = (id, params, callback) => {
   var username = params.user.username;
@@ -60,19 +42,20 @@ apiManager.changePassword = (id, params, callback) => {
 
 // Create a new user
 apiManager.createUser = (params, callback) => {
-  var user = createUserWithData(
-    params.user.firstname, 
-    params.user.lastname, 
-    params.user.username, 
-    initialPassword, 
-    params.user.role,
-    params.user.managerid,
-    rightNow,
-    'anup',
-    rightNow,
-    'anup',
-    chance.bool()
-  );
+  var user = {
+    first_name: params.firstname,
+    last_name: params.lastname,
+    username: params.username,
+    password: initialPassword,
+    role: params.role,
+    manager_user_id: params.managerid,
+    first_login: true,
+    created_at: rightNow,
+    created_by: 'anup',
+    last_modified_at: rightNow,
+    last_modified_by: 'anup',
+    active: true
+  };
   connection.query('INSERT INTO user SET ?', user, (err, result) => {
     if (err) {
       callback(err);
@@ -84,7 +67,7 @@ apiManager.createUser = (params, callback) => {
 
 // Get all users
 apiManager.allUsers = (callback) => {
-  connection.query('SELECT * FROM user', (err, result) => {
+  connection.query('SELECT * FROM user WHERE active = ?', true, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -95,7 +78,7 @@ apiManager.allUsers = (callback) => {
 
 // Get a user
 apiManager.getUser = (id, callback) => {
-  connection.query('SELECT * FROM user WHERE user_id = ?', id, (err, result) => {
+  connection.query('SELECT * FROM user WHERE active = ? AND user_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -106,19 +89,16 @@ apiManager.getUser = (id, callback) => {
 
 // Update a user
 apiManager.updateUser = (id, params, callback) => {
-  var user = createUserWithData(
-    params.user.firstname, 
-    params.user.lastname, 
-    params.user.username, 
-    params.user.password, 
-    params.user.role,
-    params.user.managerid,
-    rightNow,
-    'anup',
-    rightNow,
-    'anup',
-    chance.bool()
-  );
+  var user = {
+    first_name: params.firstname,
+    last_name: params.lastname,
+    username: params.username,
+    role: params.role,
+    manager_user_id: params.managerid,
+    first_login: false,
+    last_modified_at: rightNow,
+    last_modified_by: 'anup',
+  };
   connection.query('UPDATE user SET ? WHERE user_id = ?', [user, id], (err, result) => {
     if (err) {
       callback(err);
@@ -130,7 +110,7 @@ apiManager.updateUser = (id, params, callback) => {
 
 // Delete a user
 apiManager.deleteUser = (id, callback) => {
-  connection.query('DELETE FROM user WHERE user_id = ?', id, (err, result) => {
+  connection.query('UPDATE user SET active = ? WHERE user_id = ?', [false, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -140,35 +120,19 @@ apiManager.deleteUser = (id, callback) => {
 };
 
 // STUDENTS
-var createStudentWithData = (fname, lname, gender, ethn, cAt, cBy, mAt, mBy, active) => {
-  var student = {
-    first_name: fname,
-    last_name: lname,
-    gender: gender,
-    ethnicity: ethn,
-    created_at: cAt,
-    created_by: cBy,
-    last_modified_at: mAt,
-    last_modified_by: mBy,
-    active: active
-  };
-  
-  return student;
-};
-
 // Create a student
 apiManager.createStudent = (params, callback) => {
-  var student = createStudentWithData (
-    params.student.firstname,
-    params.student.lastname,
-    params.student.gender,
-    params.student.ethnicity,
-    rightNow,
-    'admin',
-    rightNow,
-    'admin',
-    chance.bool()
-  );
+  var student = {
+    first_name: params.firstname,
+    last_name: params.lastname,
+    gender: params.gender,
+    ethnicity: params.ethnicity,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true
+  };
   connection.query('INSERT INTO student SET ?', student, (err, result) => {
     if (err) {
       callback(err);
@@ -180,7 +144,7 @@ apiManager.createStudent = (params, callback) => {
 
 // Get all students
 apiManager.allStudents = (callback) => {
-  connection.query('SELECT * FROM student', (err, result) => {
+  connection.query('SELECT * FROM student WHERE active = ?', true, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -191,7 +155,7 @@ apiManager.allStudents = (callback) => {
 
 // Get a student
 apiManager.getStudent = (id, callback) => {
-  connection.query('SELECT * FROM student WHERE student_id = ?', id, (err, result) => {
+  connection.query('SELECT * FROM student WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -202,17 +166,14 @@ apiManager.getStudent = (id, callback) => {
 
 // Update a student
 apiManager.updateStudent = (id, params, callback) => {
-  var student = createStudentWithData (
-    params.student.firstname,
-    params.student.lastname,
-    params.student.gender,
-    params.student.ethnicity,
-    rightNow,
-    'admin',
-    rightNow,
-    'admin',
-    chance.bool()
-  );
+  var student = {
+    first_name: params.firstname,
+    last_name: params.lastname,
+    gender: params.gender,
+    ethnicity: params.ethnicity,
+    created_at: rightNow,
+    created_by: 'admin'
+  };
   connection.query('UPDATE student SET ? WHERE student_id = ?', [student, id], (err, result) => {
     if (err) {
       callback(err);
@@ -224,7 +185,7 @@ apiManager.updateStudent = (id, params, callback) => {
 
 // Delete a user
 apiManager.deleteStudent = (id, callback) => {
-  connection.query('DELETE FROM student WHERE student_id = ?', id, (err, result) => {
+  connection.query('UPDATE student SET active = ?', false, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -232,6 +193,34 @@ apiManager.deleteStudent = (id, callback) => {
     callback(null, result);
   });
 };
+
+// SCHOOL
+// Create a school
+apiManager.createSchool = (params, callback) => {
+  var school = {
+    school_name: params.name,
+    address: params.address,
+    principal: params.principal,
+    primary_contact: params.primaryContact,
+    primary_contact_email: params.contactEmail,
+    school_district: params.district,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true 
+  };
+  
+  connection.query('INSERT INTO school VALUES ?', school, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get all schools
 
 
 // Close database connection
