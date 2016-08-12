@@ -37,7 +37,7 @@ router.post('/', (req, res, next) => {
 });
 
 // PUT Update a school
-router.put('/:schoolid', req.body, (req, res, next) => {
+router.put('/:schoolid', (req, res, next) => {
   apiManager.updateSchool(req.params.schoolid, req.body, (err, result) => {
     if (err) {
       console.error(`Error updating school id ${req.params.schoolid}`);
