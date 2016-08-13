@@ -42,9 +42,9 @@ app.use('/school-users', schoolUsers);
 app.use('/event-attendances', eventAttendances)
 
 // Accept headers for JSON requests
-app.all('*', (req, res, next) => {
+app.use('/*', (req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'https://cassydataportal.herokuapp.com');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   if ('OPTIONS' == req.method) {
