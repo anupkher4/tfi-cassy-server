@@ -26,6 +26,7 @@ connection.connect((err) => {
   console.log('connected as id' + connection.threadId);
 });
 
+
 // USERS
 // Change password
 apiManager.changePassword = (id, params, callback) => {
@@ -119,6 +120,7 @@ apiManager.deleteUser = (id, callback) => {
   });
 };
 
+
 // STUDENTS
 // Create a student
 apiManager.createStudent = (params, callback) => {
@@ -193,6 +195,275 @@ apiManager.deleteStudent = (id, callback) => {
     callback(null, result);
   });
 };
+
+
+// STUDENT ASSESSMENT SCORES
+// Get all student scores
+apiManager.getAllStudentScores = (callback) => {
+  connection.query('SELECT * FROM assessment_score WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get a specific score
+apiManager.getStudentScore = (id, callback) => {
+  connection.query('SELECT * FROM assessment_score WHERE active = ? AND score_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get score for a student
+apiManager.getStudentScoreByStudent = (id, callback) => {
+  connection.query('SELECT * FROM assessment_score WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create a score
+apiManager.createStudentScore = (id, params, callback) => {
+  var score = {
+    student_id: id,
+    react_id: rightNow,
+    score_type: params.scoretype,
+    score_value: params.score,
+    assessment_date: params.date,
+    created_at: rightNow,
+    created_by: params.createdby,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby,
+    active: true
+  };
+  connection.query('INSERT INTO assessment_score VALUES ?', score, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update a score
+apiManager.updateStudentScore = (id, params, callback) => {
+  var score = {
+    react_id: rightNow,
+    score_type: params.scoretype,
+    score_value: params.score,
+    assessment_date: params.date,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby
+  };
+  connection.query('UPDATE assessment_score SET ? WHERE score_id = ?', [score, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete a score
+apiManager.deleteStudentScore = (id, params, callback) => {
+  connection.query('UPDATE assessment_score SET active = ? WHERE score_id = ?', [false, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+
+// PRESENTING PROBLEM
+// Get all problems
+apiManager.getAllPresentingProblems = (callback) => {
+  connection.query('SELECT * FROM presenting_problem WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get a specific problem
+apiManager.getPresentingProblem = (id, callback) => {
+  connection.query('SELECT * FROM presenting_problem WHERE active = ? AND problem_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get problem by student
+apiManager.getPresentingProblemByStudent = (id, callback) => {
+  connection.query('SELECT * FROM presenting_problem WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create a presenting problem
+apiManager.createPresentingProblem = (id, params, callback) => {
+  var problem = {
+    student_id: id,
+    react_id: rightNow,
+    problem_type: params.problemtype,
+    date_identified: rightNow,
+    resolved: false,
+    resolution_date: rightNow,
+    created_at: rightNow,
+    created_by: params.createdby,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby,
+    active: true
+  };
+  connection.query('INSERT INTO presenting_problem VALUES ?', problem, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update a presenting problem
+apiManager.updatePresentigProblem = (id, params, callback) => {
+  var problem = {
+    react_id: rightNow,
+    problem_type: params.problemtype,
+    date_identified: rightNow,
+    resolved: params.resolved,
+    resolution_date: rightNow,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby
+  };
+  connection.query('UPDATE presenting_problem SET ? WHERE problem_id = ?', [problem, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete a presenting problem
+apiManager.deletePresentingProblem = (id, params, callback) => {
+  connection.query('UPDATE presenting_problem SET active = ? WHERE problem_id = ?', [false, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+
+// TREATMENT CONCERNS
+// Get all concerns
+apiManager.getAllTreatmentConcerns = (callback) => {
+  connection.query('SELECT * FROM treatment_concern WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get a specific concern
+apiManager.getTreatmentConcern = (id, callback) => {
+  connection.query('SELECT * FROM treatment_concern WHERE active = ? AND concern_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get concern by student
+apiManager.getTreatmentConcernByStudent = (id, callback) => {
+  connection.query('SELECT * FROM treatment_concern WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create a treatment concern
+apiManager.createTreatmentConcern = (id, params, callback) => {
+  var concern = {
+    student_id: id,
+    react_id: rightNow,
+    concern_type: params.concerntype,
+    date_identified: rightNow,
+    resolved: false,
+    resolution_date: rightNow,
+    created_at: rightNow,
+    created_by: params.createdby,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby,
+    active: true
+  };
+  connection.query('INSERT INTO treatment_concern VALUES ?', concern, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update a treatment concern
+apiManager.updateTreatmentConcern = (id, params, callback) => {
+  var concern = {
+    react_id: rightNow,
+    problem_type: params.concerntype,
+    date_identified: rightNow,
+    resolved: params.resolved,
+    resolution_date: rightNow,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby
+  };
+  connection.query('UPDATE treatment_concern SET ? WHERE concern_id = ?', [concern, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete a treatment concern
+apiManager.deletePresentingProblem = (id, params, callback) => {
+  connection.query('UPDATE treatment_concern SET active = ? WHERE concern_id = ?', [false, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
 
 // STUDENT GRADE
 // Get all student grades
@@ -287,6 +558,7 @@ apiManager.deleteStudentGrade = (id, callback) => {
   });
 };
 
+
 // STUDENT NOTES
 // Get all student notes
 apiManager.getAllStudentNotes = (callback) => {
@@ -371,6 +643,7 @@ apiManager.deleteStudentNote = (id, callback) => {
   });
 };
 
+
 // SCHOOL
 // Create a school
 apiManager.createSchool = (params, callback) => {
@@ -450,6 +723,8 @@ apiManager.deleteSchool = (id, callback) => {
     callback(null, result);
   });
 };
+
+
 
 // EVENTS
 // Create an event
@@ -544,6 +819,263 @@ apiManager.deleteEvent = (id, callback) => {
     callback(null, result);
   });
 };
+
+
+// EVENT FILES
+// Get all event files
+apiManager.getAllEventFiles = (callback) => {
+  connection.query('SELECT * FROM event_file WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get all files for an event
+apiManager.getEventFilesForEvent = (id, callback) => {
+  connection.query('SELECT * FROM event_file WHERE active = ? AND event_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get a specific event file
+apiManager.getEventFile = (id, callback) => {
+  connection.query('SELECT * FROM event_file WHERE active = ? AND event_file_id', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Attach a file to an event
+apiManager.createEventFile = (id, params, callback) => {
+  var fileDetails = {
+    event_id: id,
+    file_description: params.description,
+    file_url: params.url,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true
+  };
+  connection.query('INSERT INTO event_file VALUES ?', fileDetails, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update event file details
+apiManager.updateEventFile = (id, params, callback) => {
+  var fileDetails = {
+    file_description: params.description,
+    file_url: params.url,
+    last_modified_at: rightNow,
+    last_modified_by: 'admin'
+  };
+  connection.query('UPDATE event_file SET ? WHERE event_file_id = ?', [fileDetails, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete file for an event
+apiManager.deleteEventFile = (id, params, callback) => {
+  connection.query('UPDATE event_file SET active = ? WHERE event_file_id = ?', [false, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+
+// EVENT ATTENDANCE
+// Get all event attendances
+apiManager.getAllEventAttendances = (callback) => {
+  connection.query('SELECT * FROM event_attendance WHERE active = ?', true, schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get attendance by event
+apiManager.getEventAttendanceByEvent = (id, callback) => {
+  connection.query('SELECT * FROM event_attendance WHERE active = ? AND event_id = ?', [true, id], schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get attendance by student
+apiManager.getEventAttendanceByStudent = (id, callback) => {
+  connection.query('SELECT * FROM event_attendance WHERE active = ? AND student_id = ?', [true, id], schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create event attendance
+apiManager.createEventAttendance = (params, callback) => {
+  var attendance = {
+    event_id: params.eventid,
+    student_id: params.studentid,
+    react_id: rightNow,
+    attendee_name: params.name,
+    attendee_email: params.email,
+    created_at: rightNow,
+    created_by: params.createdby,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby,
+    active: true
+  };
+  connection.query('INSERT INTO event_attendance VALUES ?', attendance, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update event attendance
+apiManager.updateEventAttendance = (eventid, studentid, params, callback) => {
+  var attendance = {
+    event_id: params.eventid,
+    student_id: params.studentid,
+    react_id: rightNow,
+    attendee_name: params.name,
+    attendee_email: params.email,
+    last_modified_at: rightNow,
+    last_modified_by: params.modifiedby
+  };
+  connection.query('UPDATE event_attendance SET ? WHERE event_id = ? AND student_id = ?', [attendance, eventid, studentid], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete event attendance
+apiManager.updateEventAttendance = (eventid, studentid, params, callback) => {
+  connection.query('UPDATE event_attendance SET active = ? WHERE event_id = ? AND student_id = ?', [false, eventid, studentid], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+
+// SCHOOL USER
+// Get all school user relationships
+apiManager.getAllSchoolUsers = (callback) => {
+  connection.query('SELECT * FROM school_user WHERE active = ?', true, schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get user school by user
+apiManager.getSchoolUsersByUser = (id, callback) => {
+  connection.query('SELECT * FROM school_user WHERE active = ? AND user_id = ?', [true, id], schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get user school by school
+apiManager.getSchoolUsersBySchool = (id, callback) => {
+  connection.query('SELECT * FROM school_user WHERE active = ? AND school_id = ?', [true, id], schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create school user relationship
+apiManager.createSchoolUser = (params, callback) => {
+  var schoolUser = {
+    user_id: params.userid,
+    school_id: params.schoolid,
+    access_type: params.access,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true
+  };
+  connection.query('INSERT INTO school_user VALUES ?', schoolUser, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update school user relationship
+apiManager.updateSchoolUser = (userid, schoolid, params, callback) => {
+  var schoolUser = {
+    access_type: params.access,
+    last_modified_at: rightNow,
+    last_modified_by: 'admin'
+  };
+  connection.query('UPDATE school_user SET ? WHERE user_id = ? AND school_id = ?', [schoolUser, userid, schoolid], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete school user entry
+apiManager.deleteSchoolUser = (userid, schoolid, callback) => {
+  connection.query('UPDATE school_user SET active = ? WHERE user_id = ? AND school_id = ?', [false, userid, schoolid], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
 
 // FORM FIELDS
 // Get all form fields

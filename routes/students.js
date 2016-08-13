@@ -60,6 +60,44 @@ router.delete('/:studentid', (req, res, next) => {
 });
 
 
+
+// STUDENT SCORES
+// GET all student scores
+router.get('/scores', (req, res, next) => {
+  apiManager.getAllStudentScores((err, result) => {
+    if (err) {
+      console.error(`Error getting all student scores ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// GET a specific score
+router.get('/scores/:scoreid', (req, res, next) => {
+  apiManager.getStudentScore(req.params.scoreid, (err, result) => {
+    if (err) {
+      console.error(`Error getting student score id ${req.params.scoreid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// GET score for a student
+router.get('/students/:studentid/scores', (req, res, next) => {
+  apiManager.getStudentScoreByStudent(req.params.studentid, (err, result) => {
+    if (err) {
+      console.error(`Error getting score for student id ${req.params.studentid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// POST create a student score
+
+
 // STUDENT GRADES
 // GET all student grades
 router.get('/grades', (req, res, next) => {
@@ -127,6 +165,7 @@ router.delete('/grades/:gradeid', (req, res, next) => {
     res.status(200).send('Deleted ' + result.affectedRows + ' rows')
   });
 });
+
 
 
 // STUDENT NOTES

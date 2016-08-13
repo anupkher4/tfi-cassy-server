@@ -13,6 +13,8 @@ var users = require('./routes/users');
 var students = require('./routes/students');
 var schools = require('./routes/schools');
 var formFields = require('./routes/form-fields');
+var schoolUsers = require('./routes/school-users');
+var eventAttendances = require('./routes/event-attendances');
 
 var app = express();
 
@@ -36,11 +38,13 @@ app.use('/users', users);
 app.use('/students', students);
 app.use('/schools', schools);
 app.use('/form-fields', formFields);
+app.use('/school-users', schoolUsers);
+app.use('/event-attendances', eventAttendances)
 
 // Accept headers for JSON requests
 app.all('*', (req, res, next) => {
   res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
   if ('OPTIONS' == req.method) {
