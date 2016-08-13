@@ -233,7 +233,7 @@ apiManager.getAllSchools = (callback) => {
 
 // Get a specific school
 apiManager.getSchool = (id, callback) => {
-  connection.query('SELECT * FROM school WHERE school_id = ?', id, (err, result) => {
+  connection.query('SELECT * FROM school WHERE active = ? AND school_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -303,7 +303,7 @@ apiManager.createEvent = (id, params, callback) => {
 
 // Get all events
 apiManager.getAllEvents = (callback) => {
-  connection.query('SELECT * FROM event', (err, result) => {
+  connection.query('SELECT * FROM event WHERE active = ?', true, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -314,7 +314,7 @@ apiManager.getAllEvents = (callback) => {
 
 // Get all events for a school
 apiManager.getSchoolEvents = (id, callback) => {
-  connection.query('SELECT * FROM event WHERE school_id = ?', id, (err, result) => {
+  connection.query('SELECT * FROM event WHERE active = ? AND school_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -325,7 +325,7 @@ apiManager.getSchoolEvents = (id, callback) => {
 
 // Get a specific event
 apiManager.getEvent = (id, callback) => {
-  connection.query('SELECT * FROM event WHERE event_id = ?', id, (err, result) => {
+  connection.query('SELECT * FROM event WHERE active = ? AND event_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -360,6 +360,87 @@ apiManager.updateEvent = (id, params, callback) => {
 // Delete an event
 apiManager.deleteEvent = (id, callback) => {
   connection.query('UPDATE event SET active = ? WHERE event_id = ?', [false, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// FORM FIELDS
+// Get all form fields
+apiManager.getAllFormFields = (callback) => {
+  connection.query('SELECT * FROM form_field WHERE active = ?', false, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    callback(null, result);
+  });
+};
+
+// Get a form field by id
+apiManager.getFormField = (id, callback) => {
+  connection.query('SELECT * FROM form_field WHERE active = ? AND field_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get a form field by name
+apiManager.getFormFieldByName = (name, callback) => {
+  connection.query('SELECT * FROM form_field WHERE active = ? AND field_name = ?', [true, name], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Add a form field
+apiManager.createField = (params, callback) => {
+  var field = {
+    field_name: params.name,
+    field_value: params.value,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true
+  };
+  connection.query('INSERT INTO from_field VALUES ?', field, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update a form field
+apiManager.updateField = (id, params, callback) => {
+  var field = {
+    field_name: params.name,
+    field_value: params.value,
+    last_modified_at: rightNow,
+    last_modified_by: 'admin'
+  };
+  connection.query('UPDATE form_field SET ? WHERE field_id = ?', [field, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete a form field
+apiManager.deleteField = (id, callback) => {
+  connection.query('UPDATE form_field SET active = ?', false, (err, resulr) => {
     if (err) {
       callback(err);
     }

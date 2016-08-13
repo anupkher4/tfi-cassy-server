@@ -12,6 +12,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var students = require('./routes/students');
 var schools = require('./routes/schools');
+var formFields = require('./routes/form-fields');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use('/', routes);
 app.use('/users', users);
 app.use('/students', students);
 app.use('/schools', schools);
+app.use('/form-fields', formFields);
 
 // Accept headers for JSON requests
 app.all('*', (req, res, next) => {
