@@ -37,7 +37,7 @@ router.get('/:fieldname', (req, res, next) => {
 
 // POST create a form field
 router.post('/', (req, res, next) => {
-  apiManager.createField(req.body, (err, result) => {
+  apiManager.createFormField(req.body, (err, result) => {
     if (err) {
       console.error(`Could not create form field ${err}`);
     }
@@ -49,7 +49,7 @@ router.post('/', (req, res, next) => {
 
 // PUT update a form field
 router.put('/:fieldid', (req, res, next) => {
-  apiManager.updateField(req.params.fieldid, (err, result) => {
+  apiManager.updateFormField(req.params.fieldid, (err, result) => {
     if (err) {
       console.error(`Error updating form field id ${req.params.fieldid}, Error ${err}`);
     }
@@ -61,7 +61,7 @@ router.put('/:fieldid', (req, res, next) => {
 
 // DELETE a form field
 router.delete('/:fieldid', (req, res, next) => {
-  apiManager.deleteField(req.params.fieldid, (err, result) => {
+  apiManager.deleteFormField(req.params.fieldid, (err, result) => {
     if (err) {
       console.error(`Error deleting form field ${req.params.fieldid}`);
     }

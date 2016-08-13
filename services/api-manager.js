@@ -183,9 +183,186 @@ apiManager.updateStudent = (id, params, callback) => {
   });
 };
 
-// Delete a user
+// Delete a student
 apiManager.deleteStudent = (id, callback) => {
   connection.query('UPDATE student SET active = ?', false, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// STUDENT GRADE
+// Get all student grades
+apiManager.getAllStudentGrades = (callback) => {
+  connection.query('SELECT * FROM student_grade WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get student grade by id
+apiManager.getStudentGrade = (id, callback) => {
+  connection.query('SELECT * FROM student_grade WHERE active = ? AND student_grade_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get student grade by student id
+apiManager.getStudentGradeByStudent = (id, callback) => {
+  connection.query('SELECT * FROM student_grade WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create student grade
+apiManager.createStudentGrade = (id, params, callback) => {
+  var grade = {
+    student_id: id,
+    grade: params.grade,
+    school: params.school,
+    therapist: params.therapist,
+    started_at: rightNow,
+    referral_source: params.source,
+    free_reduced_lunch: params.lunch,
+    school_year: params.year,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true
+  };
+  connection.query('INSERT INTO student_grade VALUES ?', grade, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update student grade
+apiManager.updateStudentGrade = (id, params, callback) => {
+  var grade = {
+    student_id: id,
+    grade: params.grade,
+    school: params.school,
+    therapist: params.therapist,
+    referral_source: params.source,
+    free_reduced_lunch: params.lunch,
+    school_year: params.year,
+    last_modified_at: rightNow,
+    last_modified_by: 'admin'
+  };
+  connection.query('UPDATE student_grade SET ? WHERE student_id = ?', [grade, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete student grade
+apiManager.deleteStudentGrade = (id, callback) => {
+  connection.query('UPDATE student_grade SET active = ? WHERE student_grade_id = ?', [false, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// STUDENT NOTES
+// Get all student notes
+apiManager.getAllStudentNotes = (callback) => {
+  connection.query('SELECT * FROM student_note WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get student note by id
+apiManager.getStudentNote = (id, callback) => {
+  connection.query('SELECT * FROM student_note WHERE active = ? AND student_note_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get student note by student
+apiManager.getStudentNoteByStudent = (id, callback) => {
+  connection.query('SELECT * FROM student_note WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Create a student note
+apiManager.createStudentNote = (id, params, callback) => {
+  var note = {
+    student_id: id,
+    note: params.note,
+    posted_at: rightNow,
+    created_at: rightNow,
+    created_by: 'admin',
+    last_modified_at: rightNow,
+    last_modified_by: 'admin',
+    active: true
+  };
+  connection.query('INSERT INTO student_note VALUES ?', note, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Update a student note
+apiManager.updateStudentNote = (id, params, callback) => {
+  var note = {
+    student_id: id,
+    note: params.note,
+    posted_at: params.posted,
+    last_modified_at: rightNow,
+    last_modified_by: 'admin'
+  };
+  connection.query('UPDATE student_note SET ? WHERE student_id = ?', [note, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Delete a student note
+apiManager.deleteStudentNote = (id, callback) => {
+  connection.query('UPDATE student_note SET active = ? WHERE student_id = ?', [false, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -402,7 +579,7 @@ apiManager.getFormFieldByName = (name, callback) => {
 };
 
 // Add a form field
-apiManager.createField = (params, callback) => {
+apiManager.createFormField = (params, callback) => {
   var field = {
     field_name: params.name,
     field_value: params.value,
@@ -422,7 +599,7 @@ apiManager.createField = (params, callback) => {
 };
 
 // Update a form field
-apiManager.updateField = (id, params, callback) => {
+apiManager.updateFormField = (id, params, callback) => {
   var field = {
     field_name: params.name,
     field_value: params.value,
@@ -439,7 +616,7 @@ apiManager.updateField = (id, params, callback) => {
 };
 
 // Delete a form field
-apiManager.deleteField = (id, callback) => {
+apiManager.deleteFormField = (id, callback) => {
   connection.query('UPDATE form_field SET active = ?', false, (err, resulr) => {
     if (err) {
       callback(err);
