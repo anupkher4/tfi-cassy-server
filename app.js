@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require('express'), cors = require('cors');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -31,6 +31,7 @@ app.use(cookieParser());
 app.use(session({ secret: 'banana' }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
@@ -41,9 +42,9 @@ app.use('/form-fields', formFields);
 app.use('/school-users', schoolUsers);
 app.use('/event-attendances', eventAttendances)
 
+/*
 // Accept headers for JSON requests
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Origin');
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
     next();
   }
 });
+*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
