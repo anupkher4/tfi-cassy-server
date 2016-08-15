@@ -344,7 +344,7 @@ apiManager.createPresentingProblem = (id, params, callback) => {
 };
 
 // Update a presenting problem
-apiManager.updatePresentigProblem = (id, params, callback) => {
+apiManager.updatePresentingProblem = (id, params, callback) => {
   var problem = {
     react_id: rightNow,
     problem_type: params.problemtype,
@@ -454,7 +454,7 @@ apiManager.updateTreatmentConcern = (id, params, callback) => {
 };
 
 // Delete a treatment concern
-apiManager.deletePresentingProblem = (id, params, callback) => {
+apiManager.deleteTreatmentConcern = (id, params, callback) => {
   connection.query('UPDATE treatment_concern SET active = ? WHERE concern_id = ?', [false, id], (err, result) => {
     if (err) {
       callback(err);
@@ -1088,6 +1088,17 @@ apiManager.getAllFormFields = (callback) => {
   });
 };
 
+// Get all form field names
+apiManager.getAllFormFieldNames = (callback) => {
+  connection.query('SELECT DISTINCT field_name FROM form_field WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
 // Get a form field by id
 apiManager.getFormField = (id, callback) => {
   connection.query('SELECT * FROM form_field WHERE active = ? AND field_id = ?', [true, id], (err, result) => {
@@ -1101,7 +1112,7 @@ apiManager.getFormField = (id, callback) => {
 
 // Get a form field by name
 apiManager.getFormFieldByName = (name, callback) => {
-  connection.query('SELECT * FROM form_field WHERE active = ? AND field_name = ?', [true, name], (err, result) => {
+  connection.query('SELECT field_value FROM form_field WHERE active = ? AND field_name = ?', [true, name], (err, result) => {
     if (err) {
       callback(err);
     }

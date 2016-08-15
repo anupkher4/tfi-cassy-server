@@ -13,6 +13,17 @@ router.get('/', (req, res, next) => {
   });
 });
 
+// GET all form field names
+router.get('/names', (req, res, next) => {
+  apiManager.getAllFormFieldNames((err, result) => {
+    if (err) {
+      console.error(`Error getting form field names ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
 // GET a field by id
 router.get('/:fieldid', (req, res, next) => {
   apiManager.getFormField(req.params.fieldid, (err, result) => {

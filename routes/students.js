@@ -96,6 +96,179 @@ router.get('/students/:studentid/scores', (req, res, next) => {
 });
 
 // POST create a student score
+router.post('/scores', (req, res, next) => {
+  apiManager.createStudentScore(req.body, (err, result) => {
+    if (err) {
+      console.error(`There was an error creating student score ${err}`);
+    }
+    
+    console.log(`Student score created with id ${result.insertId}`);
+    res.status(201).send(result);
+  });
+});
+
+// PUT update a student score
+router.put('/scores/:scoreid', (req, res, next) => {
+  apiManager.updateStudentScore(req.params.scoreid, req.body, (err, result) => {
+    if (err) {
+      console.error(`Could not update student score id ${req.prams.scoreid}, Error ${err}`);
+    }
+    
+    res.status(200).send('Updated ' + result.changedRows + ' rows');
+  });
+});
+
+// DELETE a student score
+router.delete('/scores/:scoreid', (req, res, next) => {
+  apiManager.deleteStudentScore(req.params.scoreid, (err, result) => {
+    if (err) {
+      console.error(`Could not delete student score id ${req.params.scoreid}, Error ${err}`);
+    }
+    
+    res.status(200).send('Deleted ' + result.affectedRows + ' rows')
+  });
+});
+
+
+
+// PRESENTING PROBLEMS
+// GET all presenting problems
+router.get('/problems', (req, res, next) => {
+  apiManager.getAllPresentingProblems((err, result) => {
+    if (err) {
+      console.error(`Error getting all presenting problems ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// GET a specific problem
+router.get('/problems/:problemid', (req, res, next) => {
+  apiManager.getPresentingProblem(req.params.problemid, (err, result) => {
+    if (err) {
+      console.error(`Error getting presenting problem id ${req.params.problemid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// GET presenting problems for a student
+router.get('/students/:studentid/problems', (req, res, next) => {
+  apiManager.getPresentingProblemByStudent(req.params.studentid, (err, result) => {
+    if (err) {
+      console.error(`Error getting presenting problem for student id ${req.params.studentid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// POST create a presenting problem
+router.post('/problems', (req, res, next) => {
+  apiManager.createPresentingProblem(req.body, (err, result) => {
+    if (err) {
+      console.error(`There was an error creating presenting problem ${err}`);
+    }
+    
+    console.log(`Presenting problem created with id ${result.insertId}`);
+    res.status(201).send(result);
+  });
+});
+
+// PUT update a presenting problem
+router.put('/problems/:problemid', (req, res, next) => {
+  apiManager.updatePresentingProblem(req.params.problemid, req.body, (err, result) => {
+    if (err) {
+      console.error(`Could not update presenting problem id ${req.prams.problemid}, Error ${err}`);
+    }
+    
+    res.status(200).send('Updated ' + result.changedRows + ' rows');
+  });
+});
+
+// DELETE a presenting problem
+router.delete('/problems/:problemid', (req, res, next) => {
+  apiManager.deletePresentingProblem(req.params.problemid, (err, result) => {
+    if (err) {
+      console.error(`Could not delete presenting problem id ${req.params.problemid}, Error ${err}`);
+    }
+    
+    res.status(200).send('Deleted ' + result.affectedRows + ' rows')
+  });
+});
+
+
+
+// TREATMENT CONCERNS
+// GET all treatment concerns
+router.get('/concerns', (req, res, next) => {
+  apiManager.getAllTreatmentConcerns((err, result) => {
+    if (err) {
+      console.error(`Error getting all treatment concerns ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// GET a treatment concern
+router.get('/concerns/:concernid', (req, res, next) => {
+  apiManager.getTreatmentConcern(req.params.concernid, (err, result) => {
+    if (err) {
+      console.error(`Error getting treatment concern id ${req.params.concernid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// GET treatment concerns for a student
+router.get('/students/:studentid/concerns', (req, res, next) => {
+  apiManager.getTreatmentConcernByStudent(req.params.studentid, (err, result) => {
+    if (err) {
+      console.error(`Error getting treatment concern for student id ${req.params.studentid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
+// POST create a treatment concern
+router.post('/concerns', (req, res, next) => {
+  apiManager.createTreatmentConcern(req.body, (err, result) => {
+    if (err) {
+      console.error(`There was an error creating treatment concern ${err}`);
+    }
+    
+    console.log(`Treatment concern created with id ${result.insertId}`);
+    res.status(201).send(result);
+  });
+});
+
+// PUT update a treatment concern
+router.put('/concerns/:concernid', (req, res, next) => {
+  apiManager.updateTreatmentConcern(req.params.concernid, req.body, (err, result) => {
+    if (err) {
+      console.error(`Could not update treatment concern id ${req.prams.concernid}, Error ${err}`);
+    }
+    
+    res.status(200).send('Updated ' + result.changedRows + ' rows');
+  });
+});
+
+// DELETE a treatment concern
+router.delete('/concerns/:concernid', (req, res, next) => {
+  apiManager.deleteTreatmentConcern(req.params.concernid, (err, result) => {
+    if (err) {
+      console.error(`Could not delete treatment concern id ${req.params.concernid}, Error ${err}`);
+    }
+    
+    res.status(200).send('Deleted ' + result.affectedRows + ' rows')
+  });
+});
+
 
 
 // STUDENT GRADES

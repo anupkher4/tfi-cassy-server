@@ -27,12 +27,12 @@ app.set('view engine', 'hjs');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(session({ secret: 'banana' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
@@ -42,19 +42,6 @@ app.use('/form-fields', formFields);
 app.use('/school-users', schoolUsers);
 app.use('/event-attendances', eventAttendances)
 
-/*
-// Accept headers for JSON requests
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Origin');
-  if ('OPTIONS' == req.method) {
-       res.send(200);
-  } else {
-    next();
-  }
-});
-*/
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
