@@ -1080,7 +1080,7 @@ apiManager.deleteSchoolUser = (userid, schoolid, callback) => {
 // FORM FIELDS
 // Get all form fields
 apiManager.getAllFormFields = (callback) => {
-  connection.query('SELECT * FROM form_field WHERE active = ?', false, (err, result) => {
+  connection.query('SELECT * FROM form_field WHERE active = ?', true, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1112,7 +1112,7 @@ apiManager.getFormField = (id, callback) => {
 
 // Get a form field by name
 apiManager.getFormFieldByName = (name, callback) => {
-  connection.query('SELECT field_value FROM form_field WHERE active = ? AND field_name = ?', [true, name], (err, result) => {
+  connection.query('SELECT field_id, field_value FROM form_field WHERE active = ? AND field_name = ?', [true, name], (err, result) => {
     if (err) {
       callback(err);
     }
