@@ -7,7 +7,7 @@ var LocalStrategy = require('passport-local').Strategy;
 passport.use(new LocalStrategy(
   (username, password, done) => {
     // Find user by username
-    connection.query('SELECT * FROM user WHERE username = ? AND password = ?', [username, password], (err, user) => {
+    connection.query('SELECT * FROM user WHERE active = ? AND username = ? AND password = ?', [true, username, password], (err, user) => {
       if (err) {
         return done(err);
       }
@@ -20,5 +20,20 @@ passport.use(new LocalStrategy(
     });
   }
 ));
+
+// Serialize and De-serialize users for sessions
+passport.serializeUser((user, done) => {
+  done(null, user[0].user_id);
+});
+
+passport.deserializeUser((id, done) => {
+  connection.query('SELECT * FROM user WHERE active = ? AND user_id = ?', [true, id], (err, user) => {
+    if (err) {
+      done(err);
+    }
+    
+    done(null, user);
+  });
+});
 
 module.exports = passport;

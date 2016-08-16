@@ -28,11 +28,49 @@ connection.connect((err) => {
 
 
 // USERS
+// Get user role
+apiManager.getUserRole = (id, callback) => {
+  connection.query('SELECT role FROM user WHERE active = ? AND user_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result[0].role);
+  });
+};
+
+// Check for administrator access
+apiManager.hasAdministratorAccess = (id, callback) => {
+  apiManager.getUserRole(id, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    if (result !== 'administrator') {
+      callback(null, false);
+    }
+    callback(null, true);
+  });
+};
+
+// First login
+apiManager.firstLogin = (loggedInId, callback) => {
+  connection.query('UPDATE user SET first_login = ? WHERE user_id = ?', [false, loggedInId], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
 // Change password
-apiManager.changePassword = (id, params, callback) => {
-  var username = params.user.username;
-  var password = params.user.password;
-  connection.query('UPDATE user SET password = ? WHERE user_id = ? AND username = ?', [password, id, username], (err, result) => {
+apiManager.changePassword = (adminId, id, params, callback) => {
+  var user = {
+    password: params.password,
+    last_modified_by: adminId,
+    last_modified_at: rightNow
+  };
+  connection.query('UPDATE user SET ? WHERE user_id = ?', [user, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -42,8 +80,9 @@ apiManager.changePassword = (id, params, callback) => {
 };
 
 // Create a new user
-apiManager.createUser = (params, callback) => {
+apiManager.createUser = (adminId, params, callback) => {
   var user = {
+    react_id: rightNow,
     first_name: params.firstname,
     last_name: params.lastname,
     username: params.username,
@@ -52,9 +91,9 @@ apiManager.createUser = (params, callback) => {
     manager_user_id: params.managerid,
     first_login: true,
     created_at: rightNow,
-    created_by: 'anup',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'anup',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO user SET ?', user, (err, result) => {
@@ -89,16 +128,16 @@ apiManager.getUser = (id, callback) => {
 };
 
 // Update a user
-apiManager.updateUser = (id, params, callback) => {
+apiManager.updateUser = (adminId, id, params, callback) => {
   var user = {
+    react_id: rightNow,
     first_name: params.firstname,
     last_name: params.lastname,
     username: params.username,
     role: params.role,
     manager_user_id: params.managerid,
-    first_login: false,
     last_modified_at: rightNow,
-    last_modified_by: 'anup',
+    last_modified_by: adminId,
   };
   connection.query('UPDATE user SET ? WHERE user_id = ?', [user, id], (err, result) => {
     if (err) {
@@ -110,8 +149,13 @@ apiManager.updateUser = (id, params, callback) => {
 };
 
 // Delete a user
-apiManager.deleteUser = (id, callback) => {
-  connection.query('UPDATE user SET active = ? WHERE user_id = ?', [false, id], (err, result) => {
+apiManager.deleteUser = (adminId, id, callback) => {
+  var user = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE user SET ? WHERE user_id = ?', [user, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -125,6 +169,7 @@ apiManager.deleteUser = (id, callback) => {
 // Create a student
 apiManager.createStudent = (params, callback) => {
   var student = {
+    react_id: rightNow,
     first_name: params.firstname,
     last_name: params.lastname,
     gender: params.gender,
@@ -169,6 +214,7 @@ apiManager.getStudent = (id, callback) => {
 // Update a student
 apiManager.updateStudent = (id, params, callback) => {
   var student = {
+    react_id: rightNow,
     first_name: params.firstname,
     last_name: params.lastname,
     gender: params.gender,
@@ -503,6 +549,7 @@ apiManager.getStudentGradeByStudent = (id, callback) => {
 apiManager.createStudentGrade = (id, params, callback) => {
   var grade = {
     student_id: id,
+    react_id: rightNow,
     grade: params.grade,
     school: params.school,
     therapist: params.therapist,
@@ -529,6 +576,7 @@ apiManager.createStudentGrade = (id, params, callback) => {
 apiManager.updateStudentGrade = (id, params, callback) => {
   var grade = {
     student_id: id,
+    react_id: rightNow,
     grade: params.grade,
     school: params.school,
     therapist: params.therapist,
@@ -597,6 +645,7 @@ apiManager.getStudentNoteByStudent = (id, callback) => {
 apiManager.createStudentNote = (id, params, callback) => {
   var note = {
     student_id: id,
+    react_id: rightNow,
     note: params.note,
     posted_at: rightNow,
     created_at: rightNow,
@@ -618,6 +667,7 @@ apiManager.createStudentNote = (id, params, callback) => {
 apiManager.updateStudentNote = (id, params, callback) => {
   var note = {
     student_id: id,
+    react_id: rightNow,
     note: params.note,
     posted_at: params.posted,
     last_modified_at: rightNow,
@@ -648,6 +698,7 @@ apiManager.deleteStudentNote = (id, callback) => {
 // Create a school
 apiManager.createSchool = (params, callback) => {
   var school = {
+    react_id: rightNow,
     school_name: params.name,
     address: params.address,
     principal: params.principal,
@@ -695,6 +746,7 @@ apiManager.getSchool = (id, callback) => {
 // Update a school
 apiManager.updateSchool = (id, params, callback) => {
   var school = {
+    react_id: rightNow,
     school_name: params.name,
     address: params.address,
     principal: params.principal,
@@ -731,6 +783,7 @@ apiManager.deleteSchool = (id, callback) => {
 apiManager.createEvent = (id, params, callback) => {
   var event = {
     school_id: id,
+    react_id: rightNow,
     event_name: params.name,
     event_type: params.type,
     event_other: params.other,
@@ -790,6 +843,7 @@ apiManager.getEvent = (id, callback) => {
 apiManager.updateEvent = (id, params, callback) => {
   var event = {
     school_id: params.schoolId,
+    react_id: rightNow,
     event_name: params.name,
     event_type: params.type,
     event_other: params.other,
@@ -859,6 +913,7 @@ apiManager.getEventFile = (id, callback) => {
 apiManager.createEventFile = (id, params, callback) => {
   var fileDetails = {
     event_id: id,
+    react_id: rightNow,
     file_description: params.description,
     file_url: params.url,
     created_at: rightNow,
@@ -879,6 +934,7 @@ apiManager.createEventFile = (id, params, callback) => {
 // Update event file details
 apiManager.updateEventFile = (id, params, callback) => {
   var fileDetails = {
+    react_id: rightNow,
     file_description: params.description,
     file_url: params.url,
     last_modified_at: rightNow,
@@ -1033,6 +1089,7 @@ apiManager.createSchoolUser = (params, callback) => {
   var schoolUser = {
     user_id: params.userid,
     school_id: params.schoolid,
+    react_id: rightNow,
     access_type: params.access,
     created_at: rightNow,
     created_by: 'admin',
@@ -1052,6 +1109,7 @@ apiManager.createSchoolUser = (params, callback) => {
 // Update school user relationship
 apiManager.updateSchoolUser = (userid, schoolid, params, callback) => {
   var schoolUser = {
+    react_id: rightNow,
     access_type: params.access,
     last_modified_at: rightNow,
     last_modified_by: 'admin'
@@ -1124,6 +1182,7 @@ apiManager.getFormFieldByName = (name, callback) => {
 // Add a form field
 apiManager.createFormField = (params, callback) => {
   var field = {
+    react_id: rightNow,
     field_name: params.name,
     field_value: params.value,
     created_at: rightNow,
@@ -1144,6 +1203,7 @@ apiManager.createFormField = (params, callback) => {
 // Update a form field
 apiManager.updateFormField = (id, params, callback) => {
   var field = {
+    react_id: rightNow,
     field_name: params.name,
     field_value: params.value,
     last_modified_at: rightNow,

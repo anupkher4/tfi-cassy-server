@@ -9,8 +9,14 @@ router.get('/', (req, res, next) => {
 });
 
 // Login
-router.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+router.post('/login', passport.authenticate('local'), (req, res) => {
+  apiManager.firstLogin(JSON.stringify(req.user[0].user_id), (err, result) => {
+    if (err) {
+      console.error(`Error updating first login status ${err}`);
+    }
+    
     res.status(200).send(req.user);
+  });
 });
 
 // Logout
