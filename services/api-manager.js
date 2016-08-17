@@ -167,7 +167,7 @@ apiManager.deleteUser = (adminId, id, callback) => {
 
 // STUDENTS
 // Create a student
-apiManager.createStudent = (params, callback) => {
+apiManager.createStudent = (adminId, params, callback) => {
   var student = {
     react_id: rightNow,
     first_name: params.firstname,
@@ -175,9 +175,9 @@ apiManager.createStudent = (params, callback) => {
     gender: params.gender,
     ethnicity: params.ethnicity,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO student SET ?', student, (err, result) => {
@@ -212,7 +212,7 @@ apiManager.getStudent = (id, callback) => {
 };
 
 // Update a student
-apiManager.updateStudent = (id, params, callback) => {
+apiManager.updateStudent = (adminId, id, params, callback) => {
   var student = {
     react_id: rightNow,
     first_name: params.firstname,
@@ -220,7 +220,7 @@ apiManager.updateStudent = (id, params, callback) => {
     gender: params.gender,
     ethnicity: params.ethnicity,
     last_modified_at: rightNow,
-    last_modified_by: 'admin'
+    last_modified_by: adminId
   };
   connection.query('UPDATE student SET ? WHERE student_id = ?', [student, id], (err, result) => {
     if (err) {
@@ -232,8 +232,13 @@ apiManager.updateStudent = (id, params, callback) => {
 };
 
 // Delete a student
-apiManager.deleteStudent = (id, callback) => {
-  connection.query('UPDATE student SET active = ?', false, (err, result) => {
+apiManager.deleteStudent = (adminId, id, callback) => {
+  var student = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE student SET active = ? WHERE student_id = ?', [student, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -278,7 +283,7 @@ apiManager.getStudentScoreByStudent = (id, callback) => {
 };
 
 // Create a score
-apiManager.createStudentScore = (id, params, callback) => {
+apiManager.createStudentScore = (adminId, id, params, callback) => {
   var score = {
     student_id: id,
     react_id: rightNow,
@@ -286,9 +291,9 @@ apiManager.createStudentScore = (id, params, callback) => {
     score_value: params.score,
     assessment_date: params.date,
     created_at: rightNow,
-    created_by: params.createdby,
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby,
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO assessment_score VALUES ?', score, (err, result) => {
@@ -301,14 +306,14 @@ apiManager.createStudentScore = (id, params, callback) => {
 };
 
 // Update a score
-apiManager.updateStudentScore = (id, params, callback) => {
+apiManager.updateStudentScore = (adminId, id, params, callback) => {
   var score = {
     react_id: rightNow,
     score_type: params.scoretype,
     score_value: params.score,
     assessment_date: params.date,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby
+    last_modified_by: adminId
   };
   connection.query('UPDATE assessment_score SET ? WHERE score_id = ?', [score, id], (err, result) => {
     if (err) {
@@ -320,8 +325,13 @@ apiManager.updateStudentScore = (id, params, callback) => {
 };
 
 // Delete a score
-apiManager.deleteStudentScore = (id, params, callback) => {
-  connection.query('UPDATE assessment_score SET active = ? WHERE score_id = ?', [false, id], (err, result) => {
+apiManager.deleteStudentScore = (adminId, id, params, callback) => {
+  var score = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE assessment_score SET active = ? WHERE score_id = ?', [score, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -366,7 +376,7 @@ apiManager.getPresentingProblemByStudent = (id, callback) => {
 };
 
 // Create a presenting problem
-apiManager.createPresentingProblem = (id, params, callback) => {
+apiManager.createPresentingProblem = (adminId, id, params, callback) => {
   var problem = {
     student_id: id,
     react_id: rightNow,
@@ -375,9 +385,9 @@ apiManager.createPresentingProblem = (id, params, callback) => {
     resolved: false,
     resolution_date: rightNow,
     created_at: rightNow,
-    created_by: params.createdby,
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby,
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO presenting_problem VALUES ?', problem, (err, result) => {
@@ -390,7 +400,7 @@ apiManager.createPresentingProblem = (id, params, callback) => {
 };
 
 // Update a presenting problem
-apiManager.updatePresentingProblem = (id, params, callback) => {
+apiManager.updatePresentingProblem = (adminId, id, params, callback) => {
   var problem = {
     react_id: rightNow,
     problem_type: params.problemtype,
@@ -398,7 +408,7 @@ apiManager.updatePresentingProblem = (id, params, callback) => {
     resolved: params.resolved,
     resolution_date: rightNow,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby
+    last_modified_by: adminId
   };
   connection.query('UPDATE presenting_problem SET ? WHERE problem_id = ?', [problem, id], (err, result) => {
     if (err) {
@@ -410,8 +420,13 @@ apiManager.updatePresentingProblem = (id, params, callback) => {
 };
 
 // Delete a presenting problem
-apiManager.deletePresentingProblem = (id, params, callback) => {
-  connection.query('UPDATE presenting_problem SET active = ? WHERE problem_id = ?', [false, id], (err, result) => {
+apiManager.deletePresentingProblem = (adminId, id, params, callback) => {
+  var problem = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE presenting_problem SET active = ? WHERE problem_id = ?', [problem, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -456,7 +471,7 @@ apiManager.getTreatmentConcernByStudent = (id, callback) => {
 };
 
 // Create a treatment concern
-apiManager.createTreatmentConcern = (id, params, callback) => {
+apiManager.createTreatmentConcern = (adminId, id, params, callback) => {
   var concern = {
     student_id: id,
     react_id: rightNow,
@@ -465,9 +480,9 @@ apiManager.createTreatmentConcern = (id, params, callback) => {
     resolved: false,
     resolution_date: rightNow,
     created_at: rightNow,
-    created_by: params.createdby,
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby,
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO treatment_concern VALUES ?', concern, (err, result) => {
@@ -480,7 +495,7 @@ apiManager.createTreatmentConcern = (id, params, callback) => {
 };
 
 // Update a treatment concern
-apiManager.updateTreatmentConcern = (id, params, callback) => {
+apiManager.updateTreatmentConcern = (adminId, id, params, callback) => {
   var concern = {
     react_id: rightNow,
     problem_type: params.concerntype,
@@ -488,7 +503,7 @@ apiManager.updateTreatmentConcern = (id, params, callback) => {
     resolved: params.resolved,
     resolution_date: rightNow,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby
+    last_modified_by: adminId
   };
   connection.query('UPDATE treatment_concern SET ? WHERE concern_id = ?', [concern, id], (err, result) => {
     if (err) {
@@ -500,8 +515,13 @@ apiManager.updateTreatmentConcern = (id, params, callback) => {
 };
 
 // Delete a treatment concern
-apiManager.deleteTreatmentConcern = (id, params, callback) => {
-  connection.query('UPDATE treatment_concern SET active = ? WHERE concern_id = ?', [false, id], (err, result) => {
+apiManager.deleteTreatmentConcern = (adminId, id, params, callback) => {
+  var concern = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE treatment_concern SET active = ? WHERE concern_id = ?', [concern, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -546,7 +566,7 @@ apiManager.getStudentGradeByStudent = (id, callback) => {
 };
 
 // Create student grade
-apiManager.createStudentGrade = (id, params, callback) => {
+apiManager.createStudentGrade = (adminId, id, params, callback) => {
   var grade = {
     student_id: id,
     react_id: rightNow,
@@ -558,9 +578,9 @@ apiManager.createStudentGrade = (id, params, callback) => {
     free_reduced_lunch: params.lunch,
     school_year: params.year,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO student_grade VALUES ?', grade, (err, result) => {
@@ -573,7 +593,7 @@ apiManager.createStudentGrade = (id, params, callback) => {
 };
 
 // Update student grade
-apiManager.updateStudentGrade = (id, params, callback) => {
+apiManager.updateStudentGrade = (adminId, id, params, callback) => {
   var grade = {
     student_id: id,
     react_id: rightNow,
@@ -584,7 +604,7 @@ apiManager.updateStudentGrade = (id, params, callback) => {
     free_reduced_lunch: params.lunch,
     school_year: params.year,
     last_modified_at: rightNow,
-    last_modified_by: 'admin'
+    last_modified_by: adminId
   };
   connection.query('UPDATE student_grade SET ? WHERE student_id = ?', [grade, id], (err, result) => {
     if (err) {
@@ -596,8 +616,13 @@ apiManager.updateStudentGrade = (id, params, callback) => {
 };
 
 // Delete student grade
-apiManager.deleteStudentGrade = (id, callback) => {
-  connection.query('UPDATE student_grade SET active = ? WHERE student_grade_id = ?', [false, id], (err, result) => {
+apiManager.deleteStudentGrade = (adminId, id, callback) => {
+  var grade = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE student_grade SET active = ? WHERE student_grade_id = ?', [grade, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -642,16 +667,16 @@ apiManager.getStudentNoteByStudent = (id, callback) => {
 };
 
 // Create a student note
-apiManager.createStudentNote = (id, params, callback) => {
+apiManager.createStudentNote = (adminId, id, params, callback) => {
   var note = {
     student_id: id,
     react_id: rightNow,
     note: params.note,
     posted_at: rightNow,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO student_note VALUES ?', note, (err, result) => {
@@ -664,14 +689,14 @@ apiManager.createStudentNote = (id, params, callback) => {
 };
 
 // Update a student note
-apiManager.updateStudentNote = (id, params, callback) => {
+apiManager.updateStudentNote = (adminId, id, params, callback) => {
   var note = {
     student_id: id,
     react_id: rightNow,
     note: params.note,
     posted_at: params.posted,
     last_modified_at: rightNow,
-    last_modified_by: 'admin'
+    last_modified_by: adminId
   };
   connection.query('UPDATE student_note SET ? WHERE student_id = ?', [note, id], (err, result) => {
     if (err) {
@@ -683,8 +708,13 @@ apiManager.updateStudentNote = (id, params, callback) => {
 };
 
 // Delete a student note
-apiManager.deleteStudentNote = (id, callback) => {
-  connection.query('UPDATE student_note SET active = ? WHERE student_id = ?', [false, id], (err, result) => {
+apiManager.deleteStudentNote = (adminId, id, callback) => {
+  var note = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE student_note SET active = ? WHERE student_id = ?', [note, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -696,7 +726,7 @@ apiManager.deleteStudentNote = (id, callback) => {
 
 // SCHOOL
 // Create a school
-apiManager.createSchool = (params, callback) => {
+apiManager.createSchool = (adminId, params, callback) => {
   var school = {
     react_id: rightNow,
     school_name: params.name,
@@ -706,9 +736,9 @@ apiManager.createSchool = (params, callback) => {
     primary_contact_email: params.contactEmail,
     school_district: params.district,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true 
   };
   
@@ -744,7 +774,7 @@ apiManager.getSchool = (id, callback) => {
 };
 
 // Update a school
-apiManager.updateSchool = (id, params, callback) => {
+apiManager.updateSchool = (adminId, id, params, callback) => {
   var school = {
     react_id: rightNow,
     school_name: params.name,
@@ -754,7 +784,7 @@ apiManager.updateSchool = (id, params, callback) => {
     primary_contact_email: params.contactEmail,
     school_district: params.district,
     last_modified_at: rightNow,
-    last_modified_by: 'admin' 
+    last_modified_by: adminId 
   };
   connection.query('UPDATE school SET ? WHERE school_id = ?', [school, id], (err, result) => {
     if (err) {
@@ -766,8 +796,13 @@ apiManager.updateSchool = (id, params, callback) => {
 };
 
 // Delete a school
-apiManager.deleteSchool = (id, callback) => {
-  connection.query('UPDATE school SET active = ? WHERE school_id = ?', [false, id], (err, result) => {
+apiManager.deleteSchool = (adminId, id, callback) => {
+  var school = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId 
+  };
+  connection.query('UPDATE school SET active = ? WHERE school_id = ?', [school, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -780,7 +815,7 @@ apiManager.deleteSchool = (id, callback) => {
 
 // EVENTS
 // Create an event
-apiManager.createEvent = (id, params, callback) => {
+apiManager.createEvent = (adminId, id, params, callback) => {
   var event = {
     school_id: id,
     react_id: rightNow,
@@ -792,9 +827,9 @@ apiManager.createEvent = (id, params, callback) => {
     number_of_attendees: params.attendees,
     event_date: params.date,
     created_at: rightNow,
-    created_by: 'anup',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'anup',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO event SET', event, (err, result) => {
@@ -840,7 +875,7 @@ apiManager.getEvent = (id, callback) => {
 };
 
 // Update an event
-apiManager.updateEvent = (id, params, callback) => {
+apiManager.updateEvent = (adminId, id, params, callback) => {
   var event = {
     school_id: params.schoolId,
     react_id: rightNow,
@@ -852,7 +887,7 @@ apiManager.updateEvent = (id, params, callback) => {
     number_of_attendees: params.attendees,
     event_date: params.date,
     last_modified_at: rightNow,
-    last_modified_by: 'anup'
+    last_modified_by: adminId
   };
   connection.query('UPDATE event SET ? WHERE event_id = ?', [event, id], (err, result) => {
     if (err) {
@@ -864,8 +899,13 @@ apiManager.updateEvent = (id, params, callback) => {
 };
 
 // Delete an event
-apiManager.deleteEvent = (id, callback) => {
-  connection.query('UPDATE event SET active = ? WHERE event_id = ?', [false, id], (err, result) => {
+apiManager.deleteEvent = (adminId, id, callback) => {
+  var event = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE event SET active = ? WHERE event_id = ?', [event, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -910,16 +950,16 @@ apiManager.getEventFile = (id, callback) => {
 };
 
 // Attach a file to an event
-apiManager.createEventFile = (id, params, callback) => {
+apiManager.createEventFile = (adminId, id, params, callback) => {
   var fileDetails = {
     event_id: id,
     react_id: rightNow,
     file_description: params.description,
     file_url: params.url,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO event_file VALUES ?', fileDetails, (err, result) => {
@@ -932,13 +972,13 @@ apiManager.createEventFile = (id, params, callback) => {
 };
 
 // Update event file details
-apiManager.updateEventFile = (id, params, callback) => {
+apiManager.updateEventFile = (adminId, id, params, callback) => {
   var fileDetails = {
     react_id: rightNow,
     file_description: params.description,
     file_url: params.url,
     last_modified_at: rightNow,
-    last_modified_by: 'admin'
+    last_modified_by: adminId
   };
   connection.query('UPDATE event_file SET ? WHERE event_file_id = ?', [fileDetails, id], (err, result) => {
     if (err) {
@@ -950,8 +990,13 @@ apiManager.updateEventFile = (id, params, callback) => {
 };
 
 // Delete file for an event
-apiManager.deleteEventFile = (id, params, callback) => {
-  connection.query('UPDATE event_file SET active = ? WHERE event_file_id = ?', [false, id], (err, result) => {
+apiManager.deleteEventFile = (adminId, id, params, callback) => {
+  var fileDetails = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE event_file SET active = ? WHERE event_file_id = ?', [fileDetails, id], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -996,7 +1041,7 @@ apiManager.getEventAttendanceByStudent = (id, callback) => {
 };
 
 // Create event attendance
-apiManager.createEventAttendance = (params, callback) => {
+apiManager.createEventAttendance = (adminId, params, callback) => {
   var attendance = {
     event_id: params.eventid,
     student_id: params.studentid,
@@ -1004,9 +1049,9 @@ apiManager.createEventAttendance = (params, callback) => {
     attendee_name: params.name,
     attendee_email: params.email,
     created_at: rightNow,
-    created_by: params.createdby,
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby,
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO event_attendance VALUES ?', attendance, (err, result) => {
@@ -1019,7 +1064,7 @@ apiManager.createEventAttendance = (params, callback) => {
 };
 
 // Update event attendance
-apiManager.updateEventAttendance = (eventid, studentid, params, callback) => {
+apiManager.updateEventAttendance = (adminId, eventid, studentid, params, callback) => {
   var attendance = {
     event_id: params.eventid,
     student_id: params.studentid,
@@ -1027,7 +1072,7 @@ apiManager.updateEventAttendance = (eventid, studentid, params, callback) => {
     attendee_name: params.name,
     attendee_email: params.email,
     last_modified_at: rightNow,
-    last_modified_by: params.modifiedby
+    last_modified_by: adminId
   };
   connection.query('UPDATE event_attendance SET ? WHERE event_id = ? AND student_id = ?', [attendance, eventid, studentid], (err, result) => {
     if (err) {
@@ -1039,8 +1084,13 @@ apiManager.updateEventAttendance = (eventid, studentid, params, callback) => {
 };
 
 // Delete event attendance
-apiManager.updateEventAttendance = (eventid, studentid, params, callback) => {
-  connection.query('UPDATE event_attendance SET active = ? WHERE event_id = ? AND student_id = ?', [false, eventid, studentid], (err, result) => {
+apiManager.updateEventAttendance = (adminId, eventid, studentid, params, callback) => {
+  var attendance = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE event_attendance SET active = ? WHERE event_id = ? AND student_id = ?', [attendance, eventid, studentid], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1085,16 +1135,16 @@ apiManager.getSchoolUsersBySchool = (id, callback) => {
 };
 
 // Create school user relationship
-apiManager.createSchoolUser = (params, callback) => {
+apiManager.createSchoolUser = (adminId, params, callback) => {
   var schoolUser = {
     user_id: params.userid,
     school_id: params.schoolid,
     react_id: rightNow,
     access_type: params.access,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO school_user VALUES ?', schoolUser, (err, result) => {
@@ -1107,12 +1157,12 @@ apiManager.createSchoolUser = (params, callback) => {
 };
 
 // Update school user relationship
-apiManager.updateSchoolUser = (userid, schoolid, params, callback) => {
+apiManager.updateSchoolUser = (adminId, userid, schoolid, params, callback) => {
   var schoolUser = {
     react_id: rightNow,
     access_type: params.access,
     last_modified_at: rightNow,
-    last_modified_by: 'admin'
+    last_modified_by: adminId
   };
   connection.query('UPDATE school_user SET ? WHERE user_id = ? AND school_id = ?', [schoolUser, userid, schoolid], (err, result) => {
     if (err) {
@@ -1124,8 +1174,13 @@ apiManager.updateSchoolUser = (userid, schoolid, params, callback) => {
 };
 
 // Delete school user entry
-apiManager.deleteSchoolUser = (userid, schoolid, callback) => {
-  connection.query('UPDATE school_user SET active = ? WHERE user_id = ? AND school_id = ?', [false, userid, schoolid], (err, result) => {
+apiManager.deleteSchoolUser = (adminId, userid, schoolid, callback) => {
+  var schoolUser = {
+    ractive: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE school_user SET active = ? WHERE user_id = ? AND school_id = ?', [schoolUser, userid, schoolid], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1180,15 +1235,15 @@ apiManager.getFormFieldByName = (name, callback) => {
 };
 
 // Add a form field
-apiManager.createFormField = (params, callback) => {
+apiManager.createFormField = (adminId, params, callback) => {
   var field = {
     react_id: rightNow,
     field_name: params.name,
     field_value: params.value,
     created_at: rightNow,
-    created_by: 'admin',
+    created_by: adminId,
     last_modified_at: rightNow,
-    last_modified_by: 'admin',
+    last_modified_by: adminId,
     active: true
   };
   connection.query('INSERT INTO from_field VALUES ?', field, (err, result) => {
@@ -1201,13 +1256,13 @@ apiManager.createFormField = (params, callback) => {
 };
 
 // Update a form field
-apiManager.updateFormField = (id, params, callback) => {
+apiManager.updateFormField = (adminId, id, params, callback) => {
   var field = {
     react_id: rightNow,
     field_name: params.name,
     field_value: params.value,
     last_modified_at: rightNow,
-    last_modified_by: 'admin'
+    last_modified_by: adminId
   };
   connection.query('UPDATE form_field SET ? WHERE field_id = ?', [field, id], (err, result) => {
     if (err) {
@@ -1219,8 +1274,13 @@ apiManager.updateFormField = (id, params, callback) => {
 };
 
 // Delete a form field
-apiManager.deleteFormField = (id, callback) => {
-  connection.query('UPDATE form_field SET active = ?', false, (err, resulr) => {
+apiManager.deleteFormField = (adminId, id, callback) => {
+  var field = {
+    active: false,
+    last_modified_at: rightNow,
+    last_modified_by: adminId
+  };
+  connection.query('UPDATE form_field SET active = ? WHERE field_id = ?', [field, id], (err, resulr) => {
     if (err) {
       callback(err);
     }

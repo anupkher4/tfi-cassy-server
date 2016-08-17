@@ -27,7 +27,7 @@ router.get('/:schoolid', (req, res, next) => {
 
 // POST Create a school
 router.post('/', (req, res, next) => {
-  apiManager.createSchool(req.body, (err, result) => {
+  apiManager.createSchool(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`There was an error creating school ${err}`);
     }
@@ -39,7 +39,7 @@ router.post('/', (req, res, next) => {
 
 // PUT Update a school
 router.put('/:schoolid', (req, res, next) => {
-  apiManager.updateSchool(req.params.schoolid, req.body, (err, result) => {
+  apiManager.updateSchool(JSON.stringify(req.user[0].user_id), req.params.schoolid, req.body, (err, result) => {
     if (err) {
       console.error(`Error updating school id ${req.params.schoolid}`);
     }
@@ -51,7 +51,7 @@ router.put('/:schoolid', (req, res, next) => {
 
 // DELETE school
 router.delete('/:schoolid', (req, res, next) => {
-  apiManager.deleteSchool(req.params.schoolid, (err, result) => {
+  apiManager.deleteSchool(JSON.stringify(req.user[0].user_id), req.params.schoolid, (err, result) => {
     if (err) {
       console.error(`Error deleting school id ${req.params.schoolid}`);
     }
@@ -65,7 +65,7 @@ router.delete('/:schoolid', (req, res, next) => {
 // SCHOOL EVENTS
 // POST Create an event
 router.post('/:schoolid/events', (req, res, next) => {
-  apiManager.createEvent(req.params.schoolid, req.body, (err, result) => {
+  apiManager.createEvent(JSON.stringify(req.user[0].user_id), req.params.schoolid, req.body, (err, result) => {
     if (err) {
       console.error(`Error creating event with school id ${req.params.schoolid}, Error ${err}`);
     }
@@ -110,7 +110,7 @@ router.get('/events/:eventid', (req, res, next) => {
 
 // PUT update an event
 router.put('/events/:eventid', (req, res, next) => {
-  apiManager.updateEvent(req.params.eventid, req.body, (req, res, next) => {
+  apiManager.updateEvent(JSON.stringify(req.user[0].user_id), req.params.eventid, req.body, (req, res, next) => {
     if (err) {
       console.error(`Error updating event id ${req.params.eventid}, Error ${err}`);
     }
@@ -122,7 +122,7 @@ router.put('/events/:eventid', (req, res, next) => {
 
 // DELETE an event
 router.put('/events/:eventid', (req, res, next) => {
-  apiManager.deleteEvent(req.params.eventid, (req, res, next) => {
+  apiManager.deleteEvent(JSON.stringify(req.user[0].user_id), req.params.eventid, (req, res, next) => {
     if (err) {
       console.error(`Error deleting event id ${req.params.eventid}`);
     }
@@ -136,7 +136,7 @@ router.put('/events/:eventid', (req, res, next) => {
 // EVENT FILES
 // POST Create an event file
 router.post('/events/:eventid/files', (req, res, next) => {
-  apiManager.createEventFile(req.params.eventid, req.body, (err, result) => {
+  apiManager.createEventFile(JSON.stringify(req.user[0].user_id), req.params.eventid, req.body, (err, result) => {
     if (err) {
       console.error(`Error attaching event file with event id ${req.params.eventid}, Error ${err}`);
     }
@@ -181,7 +181,7 @@ router.get('/events/files/:fileid', (req, res, next) => {
 
 // PUT update an event file
 router.put('/events/files/:fileid', (req, res, next) => {
-  apiManager.updateEventFile(req.params.fileid, req.body, (req, res, next) => {
+  apiManager.updateEventFile(JSON.stringify(req.user[0].user_id), req.params.fileid, req.body, (req, res, next) => {
     if (err) {
       console.error(`Error updating event id ${req.params.fileid}, Error ${err}`);
     }
@@ -193,7 +193,7 @@ router.put('/events/files/:fileid', (req, res, next) => {
 
 // DELETE update an event file
 router.delete('/events/files/:fileid', (req, res, next) => {
-  apiManager.deleteEventFile(req.params.fileid, req.body, (req, res, next) => {
+  apiManager.deleteEventFile(JSON.stringify(req.user[0].user_id), req.params.fileid, req.body, (req, res, next) => {
     if (err) {
       console.error(`Error deleting event id ${req.params.fileid}, Error ${err}`);
     }

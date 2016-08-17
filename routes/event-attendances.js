@@ -39,7 +39,7 @@ router.get('/students/:studentid', (req, res, next) => {
 
 // POST create event attendance
 router.post('/', (req, res, next) => {
-  apiManager.createEventAttendance(req.body, (err, result) => {
+  apiManager.createEventAttendance(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`Error creating event attendance ${err}`);
     }
@@ -50,7 +50,7 @@ router.post('/', (req, res, next) => {
 
 // PUT update event attendance
 router.put('/events/:eventid/students/:studentid', (req, res, next) => {
-  apiManager.updateEventAttendance(req.params.eventid, req.params.studentid, req.body, (err, result) => {
+  apiManager.updateEventAttendance(JSON.stringify(req.user[0].user_id), req.params.eventid, req.params.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Error updating school user userid:${req.params.eventid} schoolid:${req.params.studentid}, Error ${err}`);
     }
@@ -61,7 +61,7 @@ router.put('/events/:eventid/students/:studentid', (req, res, next) => {
 
 // DELETE school user
 router.delete('/events/:eventid/students/:studentid', (req, res, next) => {
-  apiManager.deleteEventAttendance(req.params.eventid, req.params.studentid, req.body, (err, result) => {
+  apiManager.deleteEventAttendance(JSON.stringify(req.user[0].user_id), req.params.eventid, req.params.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Error deleting school user userid:${req.params.eventid} schoolid:${req.params.studentid}, Error ${err}`);
     }

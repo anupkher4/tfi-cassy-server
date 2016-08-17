@@ -27,7 +27,7 @@ router.get('/:studentid', (req, res, next) => {
 
 // POST create a new student
 router.post('/', (req, res, next) => {
-  apiManager.createStudent(req.body, (err, result) => {
+  apiManager.createStudent(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`Could not create student ${err}`);
     }
@@ -39,7 +39,7 @@ router.post('/', (req, res, next) => {
 
 // PUT update a student
 router.put('/:studentid', (req, res, next) => {
-  apiManager.updateStudent(req.params.studentid, req.body, (err, result) => {
+  apiManager.updateStudent(JSON.stringify(req.user[0].user_id), req.params.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not find user with userid ${req.params.studentid} ${err}`);
     }
@@ -50,7 +50,7 @@ router.put('/:studentid', (req, res, next) => {
 
 // DELETE a student
 router.delete('/:studentid', (req, res, next) => {
-  apiManager.deleteStudent(req.params.studentid, (err, result) => {
+  apiManager.deleteStudent(JSON.stringify(req.user[0].user_id), req.params.studentid, (err, result) => {
     if (err) {
       console.error(`Could not delete student with ${req.params.studentid} ${err}`);
     }
@@ -97,7 +97,7 @@ router.get('/students/:studentid/scores', (req, res, next) => {
 
 // POST create a student score
 router.post('/scores', (req, res, next) => {
-  apiManager.createStudentScore(req.body, (err, result) => {
+  apiManager.createStudentScore(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`There was an error creating student score ${err}`);
     }
@@ -109,7 +109,7 @@ router.post('/scores', (req, res, next) => {
 
 // PUT update a student score
 router.put('/scores/:scoreid', (req, res, next) => {
-  apiManager.updateStudentScore(req.params.scoreid, req.body, (err, result) => {
+  apiManager.updateStudentScore(JSON.stringify(req.user[0].user_id), req.params.scoreid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not update student score id ${req.prams.scoreid}, Error ${err}`);
     }
@@ -120,7 +120,7 @@ router.put('/scores/:scoreid', (req, res, next) => {
 
 // DELETE a student score
 router.delete('/scores/:scoreid', (req, res, next) => {
-  apiManager.deleteStudentScore(req.params.scoreid, (err, result) => {
+  apiManager.deleteStudentScore(JSON.stringify(req.user[0].user_id), req.params.scoreid, (err, result) => {
     if (err) {
       console.error(`Could not delete student score id ${req.params.scoreid}, Error ${err}`);
     }
@@ -167,7 +167,7 @@ router.get('/students/:studentid/problems', (req, res, next) => {
 
 // POST create a presenting problem
 router.post('/problems', (req, res, next) => {
-  apiManager.createPresentingProblem(req.body, (err, result) => {
+  apiManager.createPresentingProblem(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`There was an error creating presenting problem ${err}`);
     }
@@ -179,7 +179,7 @@ router.post('/problems', (req, res, next) => {
 
 // PUT update a presenting problem
 router.put('/problems/:problemid', (req, res, next) => {
-  apiManager.updatePresentingProblem(req.params.problemid, req.body, (err, result) => {
+  apiManager.updatePresentingProblem(JSON.stringify(req.user[0].user_id), req.params.problemid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not update presenting problem id ${req.prams.problemid}, Error ${err}`);
     }
@@ -190,7 +190,7 @@ router.put('/problems/:problemid', (req, res, next) => {
 
 // DELETE a presenting problem
 router.delete('/problems/:problemid', (req, res, next) => {
-  apiManager.deletePresentingProblem(req.params.problemid, (err, result) => {
+  apiManager.deletePresentingProblem(JSON.stringify(req.user[0].user_id), req.params.problemid, (err, result) => {
     if (err) {
       console.error(`Could not delete presenting problem id ${req.params.problemid}, Error ${err}`);
     }
@@ -237,7 +237,7 @@ router.get('/students/:studentid/concerns', (req, res, next) => {
 
 // POST create a treatment concern
 router.post('/concerns', (req, res, next) => {
-  apiManager.createTreatmentConcern(req.body, (err, result) => {
+  apiManager.createTreatmentConcern(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`There was an error creating treatment concern ${err}`);
     }
@@ -249,7 +249,7 @@ router.post('/concerns', (req, res, next) => {
 
 // PUT update a treatment concern
 router.put('/concerns/:concernid', (req, res, next) => {
-  apiManager.updateTreatmentConcern(req.params.concernid, req.body, (err, result) => {
+  apiManager.updateTreatmentConcern(JSON.stringify(req.user[0].user_id), req.params.concernid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not update treatment concern id ${req.prams.concernid}, Error ${err}`);
     }
@@ -260,7 +260,7 @@ router.put('/concerns/:concernid', (req, res, next) => {
 
 // DELETE a treatment concern
 router.delete('/concerns/:concernid', (req, res, next) => {
-  apiManager.deleteTreatmentConcern(req.params.concernid, (err, result) => {
+  apiManager.deleteTreatmentConcern(JSON.stringify(req.user[0].user_id), req.params.concernid, (err, result) => {
     if (err) {
       console.error(`Could not delete treatment concern id ${req.params.concernid}, Error ${err}`);
     }
@@ -307,7 +307,7 @@ router.get('/:studentid/grades', (req, res, next) => {
 
 // POST create a new student grade
 router.post('/:studentid/grades', (req, res, next) => {
-  apiManager.createStudentGrade(req.prams.studentid, req.body, (err, result) => {
+  apiManager.createStudentGrade(JSON.stringify(req.user[0].user_id), req.prams.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not create student grade with student id ${req.prams.studentid}, Error ${err}`);
     }
@@ -319,7 +319,7 @@ router.post('/:studentid/grades', (req, res, next) => {
 
 // PUT update a student grade
 router.post('/:studentid/grades', (req, res, next) => {
-  apiManager.updateStudentGrade(req.prams.studentid, req.body, (err, result) => {
+  apiManager.updateStudentGrade(JSON.stringify(req.user[0].user_id), req.prams.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not update student grade with student id ${req.prams.studentid}, Error ${err}`);
     }
@@ -330,7 +330,7 @@ router.post('/:studentid/grades', (req, res, next) => {
 
 // DELETE a student grade
 router.delete('/grades/:gradeid', (req, res, next) => {
-  apiManager.deleteStudentGrade(req.params.gradeid, (err, result) => {
+  apiManager.deleteStudentGrade(JSON.stringify(req.user[0].user_id), req.params.gradeid, (err, result) => {
     if (err) {
       console.error(`Could not delete student grade id ${req.params.gradeid} ${err}`);
     }
@@ -377,7 +377,7 @@ router.get('/:studentid/notes', (req, res, next) => {
 
 // POST create a new student note
 router.post('/:studentid/notes', (req, res, next) => {
-  apiManager.createStudentNote(req.prams.studentid, req.body, (err, result) => {
+  apiManager.createStudentNote(JSON.stringify(req.user[0].user_id), req.prams.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not create student note with student id ${req.prams.studentid}, Error ${err}`);
     }
@@ -389,7 +389,7 @@ router.post('/:studentid/notes', (req, res, next) => {
 
 // PUT update a student note
 router.post('/:studentid/notes', (req, res, next) => {
-  apiManager.updateStudentNote(req.prams.studentid, req.body, (err, result) => {
+  apiManager.updateStudentNote(JSON.stringify(req.user[0].user_id), req.prams.studentid, req.body, (err, result) => {
     if (err) {
       console.error(`Could not update student note with student id ${req.prams.studentid}, Error ${err}`);
     }
@@ -400,7 +400,7 @@ router.post('/:studentid/notes', (req, res, next) => {
 
 // DELETE a student note
 router.delete('/notes/:noteid', (req, res, next) => {
-  apiManager.deleteStudentNote(req.params.noteid, (err, result) => {
+  apiManager.deleteStudentNote(JSON.stringify(req.user[0].user_id), req.params.noteid, (err, result) => {
     if (err) {
       console.error(`Could not delete student note id ${req.params.gradeid} ${err}`);
     }
