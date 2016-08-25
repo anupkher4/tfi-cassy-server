@@ -2,10 +2,13 @@ var connection = require('../database/connection');
 
 var moment = require('moment');
 var chance = require('chance').Chance();
+var bcrypt = require('bcrypt');
+var apiMailgun = require('../services/mailgun');
 
+const saltRounds = 10;
 var apiManager = {};
 
-// Build user object details
+// Initial user details
 var rightNow = moment().format('YYYY-MM-DD HH:mm:ss');
 var managerId = () => {
   var id = chance.integer();
@@ -16,6 +19,8 @@ var managerId = () => {
 };
 var initialPassword = chance.string({length: 8});
 
+
+
 // Connect to database
 connection.connect((err) => {
   if (err) {
@@ -25,6 +30,29 @@ connection.connect((err) => {
   
   console.log('connected as id' + connection.threadId);
 });
+
+
+
+// SENDING EMAILS
+apiManager.sendEmailWithPassword = (password, callback) => {
+  // Construct email data object
+  var data = {
+    from: 'Admin <admin@cassyapp.com>',
+    to: 'anup.kher.1990@gmail.com',
+    subject: 'Hello from Cassy',
+    text: `You have been entered into the system. Your default password is ${password}. Please change your password after logging-in.`
+  };
+
+  // Send email with default password
+  apiMailgun.sendMail(data, (err, body) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, body);
+  });
+};
+
 
 
 // USERS
@@ -65,6 +93,7 @@ apiManager.firstLogin = (loggedInId, callback) => {
 
 // Change password
 apiManager.changePassword = (adminId, id, params, callback) => {
+  
   var user = {
     password: params.password,
     last_modified_by: adminId,
@@ -74,19 +103,21 @@ apiManager.changePassword = (adminId, id, params, callback) => {
     if (err) {
       callback(err);
     }
-    
+
     callback(null, result);
   });
 };
 
 // Create a new user
 apiManager.createUser = (adminId, params, callback) => {
+  var randomLength = chance.integer({ min: 8, max: 10 });
+  var defaultPassword = chance.string({ length: randomLength });
   var user = {
     react_id: rightNow,
     first_name: params.firstname,
     last_name: params.lastname,
     username: params.username,
-    password: initialPassword,
+    password: defaultPassword,
     role: params.role,
     manager_user_id: params.managerid,
     first_login: true,
@@ -96,12 +127,19 @@ apiManager.createUser = (adminId, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
+  
   connection.query('INSERT INTO user SET ?', user, (err, result) => {
     if (err) {
       callback(err);
     }
-    
-    callback(null, result);
+
+    apiManager.sendEmailWithPassword(defaultPassword, (err, sent) => {
+      if (err) {
+        console.error('There was an error sending the email: ' + err);
+      }
+  
+      callback(null, result);
+    });
   });
 };
 
@@ -203,6 +241,30 @@ apiManager.allStudents = (callback) => {
 // Get a student
 apiManager.getStudent = (id, callback) => {
   connection.query('SELECT * FROM student WHERE active = ? AND student_id = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get students by user
+apiManager.getStudentsByUser = (id, callback) => {
+  connection.query('SELECT * FROM vw_student WHERE school_id in (SELECT school_id FROM school_user WHERE active = ? AND user_id = ?)',
+  [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get student access by user
+apiManager.getStudentAccessByUser = (userId, studentId, callback) => {
+  connection.query('SELECT access_type FROM school_user WHERE active = ? AND user_id = ? AND student_id = (SELECT school_id FROM vw_student WHERE student_id = ?)',
+  [true, userId, studentId], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -754,6 +816,18 @@ apiManager.createSchool = (adminId, params, callback) => {
 // Get all schools
 apiManager.getAllSchools = (callback) => {
   connection.query('SELECT * FROM school WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get schools by user access type
+apiManager.getSchoolAccessByUser = (userId, schoolId, callback) => {
+  connection.query('SELECT access_type FROM school_user WHERE active = ? AND user_id = ? AND school_id = ?',
+  [true, userId, schoolId], (err, result) => {
     if (err) {
       callback(err);
     }
