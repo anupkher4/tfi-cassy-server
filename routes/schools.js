@@ -27,6 +27,7 @@ router.get('/:schoolid', (req, res, next) => {
 
 // POST Create a school
 router.post('/', (req, res, next) => {
+  console.log(req.body);
   apiManager.createSchool(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
     if (err) {
       console.error(`There was an error creating school ${err}`);
