@@ -804,7 +804,7 @@ apiManager.createSchool = (adminId, params, callback) => {
     active: true 
   };
   
-  connection.query('INSERT INTO school VALUES ?', school, (err, result) => {
+  connection.query('INSERT INTO school SET ?', school, (err, result) => {
     if (err) {
       callback(err);
     }
