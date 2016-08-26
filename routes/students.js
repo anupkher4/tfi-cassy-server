@@ -14,6 +14,17 @@ router.get('/', (req, res, next) => {
   });
 });
 
+// GET student timeline
+router.get('/:studentid/timeline', (req, res, next) => {
+  apiManager.getStudentTimeline(req.params.studentid, (err, result) => {
+    if (err) {
+      console.error(`Error getting timeline for student id ${req.params.studentid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
 // GET student by studentid
 router.get('/:studentid', (req, res, next) => {
   apiManager.getStudent(req.params.studentid, (err, result) => {

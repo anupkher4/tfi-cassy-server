@@ -358,7 +358,7 @@ apiManager.createStudentScore = (adminId, id, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO assessment_score VALUES ?', score, (err, result) => {
+  connection.query('INSERT INTO assessment_score SET ?', score, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -452,7 +452,7 @@ apiManager.createPresentingProblem = (adminId, id, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO presenting_problem VALUES ?', problem, (err, result) => {
+  connection.query('INSERT INTO presenting_problem SET ?', problem, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -547,7 +547,7 @@ apiManager.createTreatmentConcern = (adminId, id, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO treatment_concern VALUES ?', concern, (err, result) => {
+  connection.query('INSERT INTO treatment_concern SET ?', concern, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -645,7 +645,7 @@ apiManager.createStudentGrade = (adminId, id, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO student_grade VALUES ?', grade, (err, result) => {
+  connection.query('INSERT INTO student_grade SET ?', grade, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -741,7 +741,7 @@ apiManager.createStudentNote = (adminId, id, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO student_note VALUES ?', note, (err, result) => {
+  connection.query('INSERT INTO student_note SET ?', note, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1036,7 +1036,7 @@ apiManager.createEventFile = (adminId, id, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO event_file VALUES ?', fileDetails, (err, result) => {
+  connection.query('INSERT INTO event_file SET ?', fileDetails, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1128,7 +1128,7 @@ apiManager.createEventAttendance = (adminId, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO event_attendance VALUES ?', attendance, (err, result) => {
+  connection.query('INSERT INTO event_attendance SET ?', attendance, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1221,7 +1221,7 @@ apiManager.createSchoolUser = (adminId, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO school_user VALUES ?', schoolUser, (err, result) => {
+  connection.query('INSERT INTO school_user SET ?', schoolUser, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1320,7 +1320,7 @@ apiManager.createFormField = (adminId, params, callback) => {
     last_modified_by: adminId,
     active: true
   };
-  connection.query('INSERT INTO from_field VALUES ?', field, (err, result) => {
+  connection.query('INSERT INTO from_field SET ?', field, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1355,6 +1355,18 @@ apiManager.deleteFormField = (adminId, id, callback) => {
     last_modified_by: adminId
   };
   connection.query('UPDATE form_field SET active = ? WHERE field_id = ?', [field, id], (err, resulr) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+
+// Student timeline
+apiManager.getStudentTimeline = (id, callback) => {
+  connection.query('SELECT * FROM student_timeline WHERE student_id = ?', id, (err, result) => {
     if (err) {
       callback(err);
     }
