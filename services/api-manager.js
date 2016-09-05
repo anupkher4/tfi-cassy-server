@@ -1277,7 +1277,7 @@ apiManager.getAllFormFields = (callback) => {
 
 // Get all form field names
 apiManager.getAllFormFieldNames = (callback) => {
-  connection.query('SELECT DISTINCT field_name FROM form_field WHERE active = ?', true, (err, result) => {
+  connection.query('SELECT * FROM form_field_name WHERE active = ?', true, (err, result) => {
     if (err) {
       callback(err);
     }
@@ -1312,7 +1312,7 @@ apiManager.getFormFieldByName = (name, callback) => {
 apiManager.createFormField = (adminId, params, callback) => {
   var field = {
     react_id: rightNow,
-    field_name: params.name,
+    field_name_id: params.field_name_id,
     field_value: params.value,
     created_at: rightNow,
     created_by: adminId,
@@ -1333,7 +1333,7 @@ apiManager.createFormField = (adminId, params, callback) => {
 apiManager.updateFormField = (adminId, id, params, callback) => {
   var field = {
     react_id: rightNow,
-    field_name: params.name,
+    field_name_id: params.field_name_id,
     field_value: params.value,
     last_modified_at: rightNow,
     last_modified_by: adminId
