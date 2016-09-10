@@ -1299,7 +1299,7 @@ apiManager.getFormField = (id, callback) => {
 
 // Get a form field by name
 apiManager.getFormFieldByName = (name, callback) => {
-  connection.query('SELECT field_id, field_value FROM form_field WHERE active = ? AND field_name = ?', [true, name], (err, result) => {
+  connection.query('SELECT FF.field_id, FF.field_value FROM form_field FF INNER JOIN form_field_name FFN WHERE FF.active = ? AND FF.field_name_id=FFn.field_name_id AND FFN.field_name = ?', [true, name], (err, result) => {
     if (err) {
       callback(err);
     }
