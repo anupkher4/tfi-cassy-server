@@ -1286,9 +1286,9 @@ apiManager.getAllFormFieldNames = (callback) => {
   });
 };
 
-// Get  form field name by id
-apiManager.getFormFieldNamebyid= (callback) => {
-  connection.query('SELECT * FROM form_field_name WHERE active = ? and field_name_id=?', true, (err, result) => {
+// Get form field name by id
+apiManager.getFormFieldNamebyId = (id, callback) => {
+  connection.query('SELECT * FROM form_field_name WHERE active = ? and field_name_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }
