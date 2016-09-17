@@ -56,6 +56,27 @@ router.get('/:userid', (req, res, next) => {
   });
 });
 
+// GET students by user
+router.get('/students', (req, res, next) => {
+  apiManager.hasAdministratorAccess(JSON.stringify(req.user[0].user_id), (err, admin) => {
+    if (err) {
+      console.error(`Error determining user access ${err}`);
+    }
+    if (!admin) {
+      console.log('Access denied');
+      res.status(401).send('Access denied');
+    }
+    
+    apiManager.getStudentsByUser((err, result) => {
+      if (err) {
+        console.error(`Error getting students for id ${JSON.stringify(req.user[0].user_id)}, ${err}`);
+      }
+    
+      res.status(200).send(result);
+    });
+  });
+});
+
 // POST create a new user
 router.post('/', (req, res, next) => {
   apiManager.hasAdministratorAccess(JSON.stringify(req.user[0].user_id), (err, admin) => {

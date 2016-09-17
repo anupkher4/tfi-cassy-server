@@ -16,6 +16,17 @@ passport.use(new LocalStrategy(
         return done(null, false, { message: 'Incorrect username or password.'});
       }
       
+      //console.log(`From front-end->${password}   From db->${user[0].password}`);
+      
+      /*
+      bcrypt.compare(password, user[0].password, (err, res) => {
+        if (res) {
+          return done(null, user);
+        }
+        return done(null, false, { message: 'Incorrect password.'});
+      });
+      */
+      
       return done(null, user);
     });
   }
