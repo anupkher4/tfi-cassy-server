@@ -948,17 +948,6 @@ apiManager.getEvent = (id, callback) => {
   });
 };
 
-// Get all events for a user
-apiManager.getUserEvents = (id, callback) => {
-  connection.query('SELECT * FROM event WHERE active = ? AND created_by = ?', [true, id], (err, result) => {
-    if (err) {
-      callback(err);
-    }
-    
-    callback(null, result);
-  });
-};
-
 // Update an event
 apiManager.updateEvent = (adminId, id, params, callback) => {
   var event = {
@@ -1289,6 +1278,17 @@ apiManager.getAllFormFields = (callback) => {
 // Get all form field names
 apiManager.getAllFormFieldNames = (callback) => {
   connection.query('SELECT * FROM form_field_name WHERE active = ?', true, (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
+// Get  form field name by id
+apiManager.getFormFieldNamebyid= (callback) => {
+  connection.query('SELECT * FROM form_field_name WHERE active = ? and field_name_id=?', true, (err, result) => {
     if (err) {
       callback(err);
     }

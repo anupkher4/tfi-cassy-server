@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
 /*
 // GET a field by id
 router.get('/:fieldnameid', (req, res, next) => {
-  apiManager.getFormField(req.params.fieldid, (err, result) => {
+  apiManager.getFormFieldNamebyid(req.params.fieldid, (err, result) => {
     if (err) {
       console.error(`Error getting form field id ${req.params.fieldid}, Error ${err}`);
     }
