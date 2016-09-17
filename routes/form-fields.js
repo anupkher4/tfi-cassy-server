@@ -14,6 +14,8 @@ router.get('/', (req, res, next) => {
 });
 
 // GET all form field names
+
+/*
 router.get('/names', (req, res, next) => {
   apiManager.getAllFormFieldNames((err, result) => {
     if (err) {
@@ -23,6 +25,7 @@ router.get('/names', (req, res, next) => {
     res.status(200).send(result);
   });
 });
+*/
 
 // GET a field by id
 router.get('/:fieldid', (req, res, next) => {
