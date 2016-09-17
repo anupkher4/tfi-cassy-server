@@ -948,6 +948,17 @@ apiManager.getEvent = (id, callback) => {
   });
 };
 
+// Get all events for a user
+apiManager.getUserEvents = (id, callback) => {
+  connection.query('SELECT * FROM event WHERE active = ? AND created_by = ?', [true, id], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
 // Update an event
 apiManager.updateEvent = (adminId, id, params, callback) => {
   var event = {

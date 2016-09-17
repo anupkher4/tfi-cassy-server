@@ -122,6 +122,17 @@ router.put('/:userid/change-password', (req, res, next) => {
   });
 });
 
+// GET all events for a user
+router.get('/:userid/events', (req, res, next) => {
+  apiManager.getUserEvents(req.params.userid, (err, result) => {
+    if (err) {
+      console.error(`Error getting events for school id ${req.params.userid}, Error ${err}`);
+    }
+    
+    res.status(200).send(result);
+  });
+});
+
 // DELETE a user
 router.delete('/:userid', (req, res, next) => {
   apiManager.hasAdministratorAccess(JSON.stringify(req.user[0].user_id), (err, admin) => {
