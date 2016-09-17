@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
 });
 
 
-/*
+
 // GET a field by id
 router.get('/:fieldnameid', (req, res, next) => {
   apiManager.getFormFieldNamebyid(req.params.fieldid, (err, result) => {
@@ -26,6 +26,7 @@ router.get('/:fieldnameid', (req, res, next) => {
   });
 });
 
+/*
 // GET a field by name
 router.get('/:fieldname', (req, res, next) => {
   apiManager.getFormFieldByName(req.params.fieldname, (err, result) => {
