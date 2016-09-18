@@ -56,14 +56,35 @@ router.get('/:userid', (req, res, next) => {
   });
 });
 
+
+
 // GET students by user
 router.get('/students', (req, res, next) => {
-  apiManager.getStudentsByUser((err, result) => {
-    if (err) {
-      console.error(`Error getting students for id ${JSON.stringify(req.user[0].user_id)}, ${err}`);
-    }
   
-    res.status(200).send(result);
+  // Check if admin, then call allUsers
+  apiManager.hasAdministratorAccess(JSON.stringify(req.user[0].user_id), (err, admin) => {
+    if (err) {
+      console.error(`Error determining user access ${err}`);
+    }
+    
+    if (admin) {
+      apiManager.allUsers((err, result) => {
+        if (err) {
+          console.error(`Error getting all users ${err}`);
+        }
+    
+        res.status(200).send(result);
+      });
+    } else {
+      apiManager.getStudentsByUser((err, result) => {
+        if (err) {
+          console.error(`Error getting students for id ${JSON.stringify(req.user[0].user_id)}, ${err}`);
+        }
+  
+        res.status(200).send(result);
+      });
+    }
+    
   });
 });
 
