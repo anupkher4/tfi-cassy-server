@@ -1,9 +1,9 @@
 var mysql = require('mysql');
 var connection = mysql.createConnection({
-  host: 'cassy-mysql-instance1.c49puvquqrxu.us-east-1.rds.amazonaws.com',
+  host: '138.68.51.129',
   port: 3306,
-  user: 'awsadminuser',
-  password: 'tficassy',
+  user: 'appuser',
+  password: 'APP_pass1',
   database: 'cassydev'
 });
 
