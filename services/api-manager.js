@@ -289,7 +289,7 @@ apiManager.getStudent = (id, callback) => {
 
 // Get students by user
 apiManager.getStudentsByUser = (id, callback) => {
-  connection.query('SELECT * FROM vw_student WHERE school_id in (SELECT school_id FROM school_user WHERE active = ? AND user_id = ?)',
+  connection.query('SELECT * FROM student WHERE school_id in (SELECT school_id FROM school_user WHERE active = ? AND user_id = ?)',
   [true, id], (err, result) => {
     if (err) {
       callback(err);
@@ -319,6 +319,11 @@ apiManager.updateStudent = (adminId, id, params, callback) => {
     last_name: params.lastname,
     gender: params.gender,
     ethnicity: params.ethnicity,
+	grade: params.grade,
+	school: params.school,
+	student_number: params.student_number,
+	referral_source: params.referral_source,
+	free_reduced_lunch: params.free_reduced_lunch,
     last_modified_at: rightNow,
     last_modified_by: adminId
   };
@@ -338,7 +343,7 @@ apiManager.deleteStudent = (adminId, id, callback) => {
     last_modified_at: rightNow,
     last_modified_by: adminId
   };
-  connection.query('UPDATE student SET active = ? WHERE student_id = ?', [student, id], (err, result) => {
+  connection.query('CALL sp_del_student(studentid=?, userid=?)', [student, id], (err, result) => {
     if (err) {
       callback(err);
     }
