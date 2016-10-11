@@ -94,17 +94,33 @@ apiManager.firstLogin = (loggedInId, callback) => {
 // Change password
 apiManager.changePassword = (adminId, id, params, callback) => {
   
-  var user = {
-    password: params.password,
-    last_modified_by: adminId,
-    last_modified_at: rightNow
-  };
-  connection.query('UPDATE user SET ? WHERE user_id = ?', [user, id], (err, result) => {
+  bcrypt.genSalt(saltRounds, (err, salt) => {
+    
     if (err) {
       callback(err);
     }
+    
+    bcrypt.hash(params.password, salt, (err, hash) => {
+      
+      if (err) {
+        callback(err);
+      }
+      
+      var user = {
+        password: hash,
+        last_modified_by: adminId,
+        last_modified_at: rightNow
+      };
+      
+      connection.query('UPDATE user SET ? WHERE user_id = ?', [user, id], (err, result) => {
+        if (err) {
+          callback(err);
+        }
 
-    callback(null, result);
+        callback(null, result);
+      }); 
+      
+    });
   });
 };
 
@@ -112,33 +128,54 @@ apiManager.changePassword = (adminId, id, params, callback) => {
 apiManager.createUser = (adminId, params, callback) => {
   var randomLength = chance.integer({ min: 8, max: 10 });
   var defaultPassword = chance.string({ length: randomLength });
-  var user = {
-    react_id: rightNow,
-    first_name: params.firstname,
-    last_name: params.lastname,
-    username: params.username,
-    password: defaultPassword,
-    role: params.role,
-    manager_user_id: params.managerid,
-    first_login: true,
-    created_at: rightNow,
-    created_by: adminId,
-    last_modified_at: rightNow,
-    last_modified_by: adminId,
-    active: true
-  };
   
-  connection.query('INSERT INTO user SET ?', user, (err, result) => {
+  console.log(`Random generated password ${defaultPassword}`);
+  
+  bcrypt.genSalt(saltRounds, (err, salt) => {
+    
     if (err) {
       callback(err);
     }
-
-    apiManager.sendEmailWithPassword(defaultPassword, (err, sent) => {
+    
+    bcrypt.hash(defaultPassword, salt, (err, hash) => {
+      
       if (err) {
-        console.error('There was an error sending the email: ' + err);
+        callback(err);
       }
+      
+      console.log(`Hashed password ${hash}`);
+      
+      var user = {
+        react_id: rightNow,
+        first_name: params.firstname,
+        last_name: params.lastname,
+        username: params.username,
+        password: hash,
+        role: params.role,
+        manager_user_id: params.managerid,
+        first_login: true,
+        created_at: rightNow,
+        created_by: adminId,
+        last_modified_at: rightNow,
+        last_modified_by: adminId,
+        active: true
+      };
+      
+      connection.query('INSERT INTO user SET ?', user, (err, result) => {
+        if (err) {
+          callback(err);
+        }
+
+        console.log(`Email generated with password ${defaultPassword}`);
+        apiManager.sendEmailWithPassword(defaultPassword, (err, sent) => {
+          if (err) {
+            console.error('There was an error sending the email: ' + err);
+          }
   
-      callback(null, result);
+          callback(null, result);
+        });
+      }); 
+      
     });
   });
 };
@@ -167,6 +204,7 @@ apiManager.getUser = (id, callback) => {
 
 // Update a user
 apiManager.updateUser = (adminId, id, params, callback) => {
+  
   var user = {
     react_id: rightNow,
     first_name: params.firstname,
@@ -1286,9 +1324,9 @@ apiManager.getAllFormFieldNames = (callback) => {
   });
 };
 
-// Get  form field name by id
-apiManager.getFormFieldNamebyid= (callback) => {
-  connection.query('SELECT * FROM form_field_name WHERE active = ? and field_name_id=?', true, (err, result) => {
+// Get form field name by id
+apiManager.getFormFieldNamebyId = (id, callback) => {
+  connection.query('SELECT * FROM form_field_name WHERE active = ? and field_name_id = ?', [true, id], (err, result) => {
     if (err) {
       callback(err);
     }

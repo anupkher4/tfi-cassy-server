@@ -13,6 +13,7 @@ var users = require('./routes/users');
 var students = require('./routes/students');
 var schools = require('./routes/schools');
 var formFields = require('./routes/form-fields');
+var formFieldNames = require('./routes/form-field-names');
 var schoolUsers = require('./routes/school-users');
 var eventAttendances = require('./routes/event-attendances');
 
@@ -43,6 +44,7 @@ app.use('/users', users);
 app.use('/students', students);
 app.use('/schools', schools);
 app.use('/form-fields', formFields);
+app.use('/form-field-names', formFieldNames);
 app.use('/school-users', schoolUsers);
 app.use('/event-attendances', eventAttendances)
 

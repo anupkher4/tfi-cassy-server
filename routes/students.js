@@ -36,6 +36,7 @@ router.get('/:studentid', (req, res, next) => {
   });
 });
 
+
 // POST create a new student
 router.post('/', (req, res, next) => {
   apiManager.createStudent(JSON.stringify(req.user[0].user_id), req.body, (err, result) => {
