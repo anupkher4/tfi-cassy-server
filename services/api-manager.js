@@ -319,11 +319,11 @@ apiManager.updateStudent = (adminId, id, params, callback) => {
     last_name: params.lastname,
     gender: params.gender,
     ethnicity: params.ethnicity,
-	grade: params.grade,
-	school: params.school,
-	student_number: params.student_number,
-	referral_source: params.referral_source,
-	free_reduced_lunch: params.free_reduced_lunch,
+	  grade: params.grade,
+	  school: params.school,
+	  student_number: params.studentnumber,
+	  referral_source: params.referralsource,
+	  free_reduced_lunch: params.freereducedlunch,
     last_modified_at: rightNow,
     last_modified_by: adminId
   };
