@@ -17,7 +17,7 @@ passport.use(new LocalStrategy(
       }
       
       
-      console.log(`From db->${user[0].password}`);
+      //console.log(`From db->${user[0].password}`);
       
       // Check password hash
       bcrypt.compare(password, user[0].password, (err, res) => {

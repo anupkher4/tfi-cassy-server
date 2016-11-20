@@ -108,6 +108,7 @@ apiManager.changePassword = (adminId, id, params, callback) => {
       
       var user = {
         password: hash,
+        first_login: false,
         last_modified_by: adminId,
         last_modified_at: rightNow
       };
