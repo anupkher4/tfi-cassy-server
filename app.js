@@ -16,6 +16,7 @@ var formFields = require('./routes/form-fields');
 var formFieldNames = require('./routes/form-field-names');
 var schoolUsers = require('./routes/school-users');
 var eventAttendances = require('./routes/event-attendances');
+var forgotPassword = require('./routes/forgot-password');
 
 var app = express();
 
@@ -46,7 +47,8 @@ app.use('/schools', schools);
 app.use('/form-fields', formFields);
 app.use('/form-field-names', formFieldNames);
 app.use('/school-users', schoolUsers);
-app.use('/event-attendances', eventAttendances)
+app.use('/event-attendances', eventAttendances);
+app.use('/forgot-password', forgotPassword);
 
 
 // catch 404 and forward to error handler

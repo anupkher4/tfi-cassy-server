@@ -242,6 +242,51 @@ apiManager.deleteUser = (adminId, id, callback) => {
 };
 
 
+// FORGOT PASSWORD
+apiManager.forgotPassword = (params, callback) => {
+  
+  connection.query('SELECT user_id FROM user WHERE username = ?', params.username, (err, result) => {
+    var userId = result[0].user_id;
+    var randomLength = chance.integer({ min: 8, max: 10 });
+    var defaultPassword = chance.string({ length: randomLength });
+    
+    bcrypt.genSalt(saltRounds, (err, salt) => {
+      if (err) {
+        callback(err);
+      }
+      
+      bcrypt.hash(defaultPassword, salt, (err, hash) => {
+        if (err) {
+          callback(err);
+        }
+        
+        var user = {
+        react_id: rightNow,
+        password: hash,
+        last_modified_at: rightNow
+        };
+        
+        connection.query('UPDATE user SET ? WHERE user_id = ?', [user, userId], (err, result) => {
+          if (err) {
+            callback(err);
+          }
+          
+          apiManager.sendEmailWithPassword(defaultPassword, (err, sent) => {
+            if (err) {
+              console.error('There was an error sending the email: ' + err);
+            }
+  
+            callback(null, result);
+          });
+        });
+        
+      });
+    });
+    
+  });
+};
+
+
 // STUDENTS
 // Create a student
 apiManager.createStudent = (adminId, params, callback) => {
