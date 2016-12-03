@@ -25,7 +25,7 @@ router.get('/', (req, res, next) => {
 });
 
 // GET users by role
-router.get('/', (req, res, next) => {
+router.get('/users/role', (req, res, next) => {
   apiManager.hasAdministratorAccess(JSON.stringify(req.user[0].user_id), (err, admin) => {
     if (err) {
       console.error(`Error determining user access ${err}`);
