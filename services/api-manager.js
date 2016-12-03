@@ -192,6 +192,17 @@ apiManager.allUsers = (callback) => {
   });
 };
 
+// Get users by role
+apiManager.getUsersbyRole = (role,callback) => {
+  connection.query('SELECT * FROM user WHERE active = ? and role=?', [true,role], (err, result) => {
+    if (err) {
+      callback(err);
+    }
+    
+    callback(null, result);
+  });
+};
+
 // Get a user
 apiManager.getUser = (id, callback) => {
   connection.query('SELECT * FROM user WHERE active = ? AND user_id = ?', [true, id], (err, result) => {
