@@ -34,13 +34,13 @@ connection.connect((err) => {
 
 
 // SENDING EMAILS
-apiManager.sendEmailWithPassword = (password, callback) => {
+apiManager.sendEmailWithPassword = (password, emailId, callback) => {
   // Construct email data object
   var data = {
     from: 'Admin <admin@cassyapp.com>',
-    to: 'anup.kher.1990@gmail.com',
-    subject: 'Hello from Cassy',
-    text: `You have been entered into the system. Your default password is ${password}. Please change your password after logging-in.`
+    to: emailId,
+    subject: 'Cassy System Message',
+    text: `Your temporary password is ${password}. Please change your password after logging-in.`
   };
 
   // Send email with default password
@@ -73,7 +73,7 @@ apiManager.hasAdministratorAccess = (id, callback) => {
     if (err) {
       callback(err);
     }
-    if (result !== 'administrator') {
+    if (result !== 'Administrator') {
       callback(null, false);
     }
     callback(null, true);
@@ -168,7 +168,7 @@ apiManager.createUser = (adminId, params, callback) => {
         }
 
         console.log(`Email generated with password ${defaultPassword}`);
-        apiManager.sendEmailWithPassword(defaultPassword, (err, sent) => {
+        apiManager.sendEmailWithPassword(defaultPassword, params.username, (err, sent) => {
           if (err) {
             console.error('There was an error sending the email: ' + err);
           }
@@ -193,8 +193,8 @@ apiManager.allUsers = (callback) => {
 };
 
 // Get users by role
-apiManager.getUsersbyRole = (role,callback) => {
-  connection.query('SELECT * FROM user WHERE active = ? and role=?', [true,role], (err, result) => {
+apiManager.getUsersByRole = (role, callback) => {
+  connection.query('SELECT * FROM user WHERE active = ? and role = ?', [true, role], (err, result) => {
     if (err) {
       callback(err);
     }
@@ -282,7 +282,7 @@ apiManager.forgotPassword = (params, callback) => {
             callback(err);
           }
           
-          apiManager.sendEmailWithPassword(defaultPassword, (err, sent) => {
+          apiManager.sendEmailWithPassword(defaultPassword, params.username, (err, sent) => {
             if (err) {
               console.error('There was an error sending the email: ' + err);
             }

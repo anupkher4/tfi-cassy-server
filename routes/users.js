@@ -25,7 +25,7 @@ router.get('/', (req, res, next) => {
 });
 
 // GET users by role
-router.get('/users/role', (req, res, next) => {
+router.get('/:role', (req, res, next) => {
   apiManager.hasAdministratorAccess(JSON.stringify(req.user[0].user_id), (err, admin) => {
     if (err) {
       console.error(`Error determining user access ${err}`);
@@ -35,8 +35,7 @@ router.get('/users/role', (req, res, next) => {
       res.status(401).send('Access denied');
     }
     
-    console.log(`Logged-in with user id ${JSON.stringify(req.user[0].user_id)}`);
-    apiManager.getUsersbyRole((err, result) => {
+    apiManager.getUsersByRole(req.params.role, (err, result) => {
       if (err) {
         console.error(`Error getting all users ${err}`);
       }
